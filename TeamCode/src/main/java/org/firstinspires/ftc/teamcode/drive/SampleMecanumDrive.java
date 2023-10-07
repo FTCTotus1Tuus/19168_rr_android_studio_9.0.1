@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.drive.DriveSignal;
-import com.acmerobotics.roadrunner.drive.MecanumDrive; 
+import com.acmerobotics.roadrunner.drive.MecanumDrive;
 import com.acmerobotics.roadrunner.followers.HolonomicPIDVAFollower;
 import com.acmerobotics.roadrunner.followers.TrajectoryFollower;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -102,8 +102,8 @@ public class SampleMecanumDrive extends MecanumDrive {
 
         leftFront = hardwareMap.get(DcMotorEx.class, "omniMotor2");
         leftRear = hardwareMap.get(DcMotorEx.class, "omniMotor0");
-        rightRear = hardwareMap.get(DcMotorEx.class, "omniMotor1");
-        rightFront = hardwareMap.get(DcMotorEx.class, "omniMotor3");
+        rightRear = hardwareMap.get(DcMotorEx.class, "omniMotor3");
+        rightFront = hardwareMap.get(DcMotorEx.class, "omniMotor1");
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
@@ -125,7 +125,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
         // TODO: reverse any motors using DcMotor.setDirection() - Done - pending test
 
-        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
 
         List<Integer> lastTrackingEncPositions = new ArrayList<>();
