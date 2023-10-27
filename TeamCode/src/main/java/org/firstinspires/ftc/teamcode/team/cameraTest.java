@@ -32,6 +32,8 @@ public class cameraTest extends LinearOpMode {
      */
     private AprilTagProcessor aprilTag;
 
+
+
     /**
      * The variable to store our instance of the vision portal.
      */
@@ -51,7 +53,6 @@ public class cameraTest extends LinearOpMode {
             public void onOpened()
             {
                 camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
-                camera.setPipeline(teamPropMaskPipeline);
             }
             @Override
             public void onError(int errorCode)
@@ -68,6 +69,8 @@ public class cameraTest extends LinearOpMode {
         telemetry.addData(">", "Touch Play to start OpMode");
         telemetry.update();
         waitForStart();
+
+        camera.setPipeline(teamPropMaskPipeline);
 
         if (opModeIsActive()) {
             while (opModeIsActive()) {
@@ -89,7 +92,7 @@ public class cameraTest extends LinearOpMode {
                 }
 
                 // Share the CPU.
-                sleep(20);
+//                sleep(20);
             }
         }
 

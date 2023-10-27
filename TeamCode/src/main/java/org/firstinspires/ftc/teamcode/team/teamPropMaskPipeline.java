@@ -22,16 +22,20 @@ class TeamPropMaskPipeline extends OpenCvPipeline
         double avgFirstThird, avgSecondThird, avgThirdThird;
         Mat workingMat1 = new Mat(), workingMat2 = new Mat(), workingMat3 = new Mat();
         Mat mask1 = new Mat(), mask2 = new Mat(), mask3 = new Mat();
-        @Override
+
+        public static double clawPositionL;
+        public static double clawPositionR;
+
+    @Override
         public Mat processFrame(Mat input) {
 
-            workingMat1.release();
-            workingMat2.release();
-            workingMat3.release();
-
-            mask1.release();
-            mask2.release();
-            mask3.release();
+//            workingMat1.release();
+//            workingMat2.release();
+//            workingMat3.release();
+//
+//            mask1.release();
+//            mask2.release();
+//            mask3.release();
 
 
             // Calculate the width and height of the frame
@@ -69,12 +73,17 @@ class TeamPropMaskPipeline extends OpenCvPipeline
             else { lastResults = 3;}
 
 
-//            if (maskSel == 2) {
-//                return workingMat1;
-//            } else if (maskSel == 1) {
-//                return mask1;
-//            }else {
-            return workingMat3.adjustROI(0,0,frameWidth,frameHeight);
+            workingMat1.release();
+            workingMat2.release();
+            workingMat3.release();
+
+            mask1.release();
+            mask2.release();
+            mask3.release();
+
+
+            return input;
+//            return workingMat3.adjustROI(0,0,frameWidth,frameHeight);
 //        }
         }
 

@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.team;
 
+import static org.firstinspires.ftc.teamcode.team.TeamPropMaskPipeline.clawPositionL;
+import static org.firstinspires.ftc.teamcode.team.TeamPropMaskPipeline.clawPositionR;
+
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -18,10 +21,11 @@ public class IntakeTest extends LinearOpMode{
     CRServo rightIntake;
     CRServo feeder;
 
-    Servo clawWrist;
+    CRServo clawWrist;
     Servo clawLeft;
     Servo clawRight;
-
+    // l open is 0.65 closed is 0.5
+    // r open is 0.15 closed is 0.3 for claw servos
     double[] direction = {0.0,0.0};
     double rotation;
     double regularDivBy = 1;
@@ -55,7 +59,7 @@ public class IntakeTest extends LinearOpMode{
         leftIntake = hardwareMap.get(CRServo.class, "leftIntake");
         rightIntake = hardwareMap.get(CRServo.class, "rightIntake");
 
-        clawWrist = hardwareMap.get(Servo.class, "clawWrist");
+        clawWrist = hardwareMap.get(CRServo.class, "clawWrist");
         clawLeft = hardwareMap.get(Servo.class, "clawLeft");
         clawRight = hardwareMap.get(Servo.class, "clawRight");
 
@@ -75,13 +79,15 @@ public class IntakeTest extends LinearOpMode{
             rightIntake.setPower(0);
         }
 
-            clawWrist.setPosition((gamepad1.dpad_left ? 1:0) + (gamepad1.dpad_right ? -1:0));
 
+            clawWrist.setPower(gamepad2.left_stick_x/3);
+//            clawLeft.setDirection(Servo.Direction.REVERSE);
 
-            if (gamepad1.x) {clawLeft.setPosition(1);} else {
-            clawLeft.setPosition(0); }
-            if (gamepad1.a) {clawRight.setPosition(1);} else {
-            clawRight.setPosition(0); }
+//            if (gamepad2.a) {clawLeft.setPosition(0.8);} else {clawLeft.setPosition(1);}
+            clawLeft.setPosition(clawPositionL);
+            clawRight.setPosition(clawPositionR);
+//            clawLeft.setPosition(gamepad2.right_stick_x);
+//            clawRight.setPower(gamepad2.right_stick_y);
 
             leftArm.setPower(gamepad1.right_trigger-gamepad1.left_trigger);
             rightArm.setPower(gamepad1.right_trigger-gamepad1.left_trigger);
@@ -94,6 +100,24 @@ public class IntakeTest extends LinearOpMode{
 
             MoveRobot(direction, -rotation, turboBoost);
         }
+        /*
+        if macro = true and running = false
+        running = true
+
+        if running = true
+            tiny power close claw hands
+            switch deltatime
+
+            100ms
+            retract claw
+
+            200ms
+            raise arm
+
+            300ms
+
+         */
+
     }
 
     public void MoveRobot(double[] direction, double rotation, boolean turboBoost){
