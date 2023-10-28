@@ -24,8 +24,13 @@ public class IntakeTest extends LinearOpMode{
     CRServo clawWrist;
     Servo clawLeft;
     Servo clawRight;
-    // l open is 0.65 closed is 0.5
-    // r open is 0.15 closed is 0.3 for claw servos
+    // l open is 0.4 closed is 0.1
+    // r open is 0.6 closed is 0.9 for claw servos
+    double clawLeftPositionOpen=0.4;
+    double clawLeftPositionClosed=0.08;
+    double clawRightPositionOpen=0.6;
+    double clawRightPositionClosed=0.93;
+
     double[] direction = {0.0,0.0};
     double rotation;
     double regularDivBy = 1;
@@ -69,34 +74,67 @@ public class IntakeTest extends LinearOpMode{
         //Start
         while (this.opModeIsActive()) {
 
-            feeder.setPower((gamepad1.right_bumper ? 1:0) + (gamepad1.left_bumper ? -1:0));
+            // DONE: TODO: Provide control to reverse the intake wheels so they can remove an unwanted pixel that gets sucked in.
+            // DONE: TODO: gamepad1.right_bumper = intake; gamepad1.right_trigger = belt up.
+            // DONE: TODO: gamepad1.left_bumper = reverse intake; gamepad1.left_trigger = belt down.
+            if (gamepad1.right_bumper) {
+                leftIntake.setPower(1);
+                rightIntake.setPower(-1);
+            } else {
+                leftIntake.setPower(0);
+                rightIntake.setPower(0);
+            }
+            if (gamepad1.left_bumper) {
+                feeder.setPower(-1);
+            } else {
+                feeder.setPower(0);
+            }
 
-        if (gamepad1.y) {
-            leftIntake.setPower(1);
-            rightIntake.setPower(-1);
-        }  else {
-            leftIntake.setPower(0);
-            rightIntake.setPower(0);
+            if(gamepad1.right_trigger>0) {
+                leftIntake.setPower(-1);
+                rightIntake.setPower(1);
+            } else {
+                leftIntake.setPower(0);
+                rightIntake.setPower(0);
+            }
+            if (gamepad1.left_trigger>0){
+                feeder.setPower(1);
+            } else {
+                feeder.setPower(0);
+            }
+//          feeder.setPower((gamepad1.right_trigger ? 1:0) + (gamepad1.left_trigger ? -1:0));
+
+            // TODO: Wrist to be on fixed positions for grabbing and for dropping on the backboard.
+            // DONE: TODO: Wrist on the left joystick up/down.
+            clawWrist.setPower(gamepad2.left_stick_y/3);
+//          clawLeft.setDirection(Servo.Direction.REVERSE);
+
+//          if (gamepad2.a) {clawLeft.setPosition(0.8);} else {clawLeft.setPosition(1);}
+//          clawLeft.setPosition(clawPositionL);
+//          clawRight.setPosition(clawPositionR);
+//          clawLeft.setPosition(gamepad2.right_stick_x);
+//          clawRight.setPosition(gamepad2.right_stick_y);
+
+        if(gamepad2.right_bumper) {
+            // Open the claw
+            clawLeft.setPosition(clawLeftPositionOpen);
+            clawRight.setPosition(clawRightPositionOpen);
+        } else if (gamepad2.left_bumper){
+            // Close the claw
+            clawLeft.setPosition(clawLeftPositionClosed);
+            clawRight.setPosition(clawRightPositionClosed);
         }
 
-
-            clawWrist.setPower(gamepad2.left_stick_x/3);
-//            clawLeft.setDirection(Servo.Direction.REVERSE);
-
-//            if (gamepad2.a) {clawLeft.setPosition(0.8);} else {clawLeft.setPosition(1);}
-            clawLeft.setPosition(clawPositionL);
-            clawRight.setPosition(clawPositionR);
-//            clawLeft.setPosition(gamepad2.right_stick_x);
-//            clawRight.setPower(gamepad2.right_stick_y);
-
-            leftArm.setPower(gamepad1.right_trigger-gamepad1.left_trigger);
-            rightArm.setPower(gamepad1.right_trigger-gamepad1.left_trigger);
+            // DONE: TODO: Arm control on the right joystick up/down, not left/right.
+            leftArm.setPower(-gamepad2.right_stick_y);
+            rightArm.setPower(-gamepad2.right_stick_y);
+            //leftArm.setPower(gamepad2.right_trigger-gamepad2.left_trigger);
+            //rightArm.setPower(gamepad2.right_trigger-gamepad2.left_trigger);
 
             direction[0] = -gamepad1.left_stick_x;
             direction[1] = -gamepad1.left_stick_y;
             rotation = -gamepad1.right_stick_x;
             turboBoost = gamepad1.left_stick_button;
-
 
             MoveRobot(direction, -rotation, turboBoost);
         }
