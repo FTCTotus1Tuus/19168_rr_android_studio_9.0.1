@@ -21,7 +21,7 @@ public class IntakeTest extends LinearOpMode{
     CRServo rightIntake;
     CRServo feeder;
 
-    CRServo clawWrist;
+    Servo clawWrist;
     Servo clawLeft;
     Servo clawRight;
     // l open is 0.4 closed is 0.1
@@ -64,7 +64,7 @@ public class IntakeTest extends LinearOpMode{
         leftIntake = hardwareMap.get(CRServo.class, "leftIntake");
         rightIntake = hardwareMap.get(CRServo.class, "rightIntake");
 
-        clawWrist = hardwareMap.get(CRServo.class, "clawWrist");
+        clawWrist = hardwareMap.get(Servo.class, "clawWrist");
         clawLeft = hardwareMap.get(Servo.class, "clawLeft");
         clawRight = hardwareMap.get(Servo.class, "clawRight");
 
@@ -105,8 +105,19 @@ public class IntakeTest extends LinearOpMode{
 //          feeder.setPower((gamepad1.right_trigger ? 1:0) + (gamepad1.left_trigger ? -1:0));
 
             // TODO: Wrist to be on fixed positions for grabbing and for dropping on the backboard.
-            // DONE: TODO: Wrist on the left joystick up/down.
-            clawWrist.setPower(gamepad2.left_stick_y/3);
+            if(gamepad2.right_trigger>0) {
+                clawWrist.setPosition(0.7);
+            } else {
+                // do nothing
+            }
+            if (gamepad2.left_trigger>0){
+                clawWrist.setPosition(0.3);
+            } else {
+                // do nothing
+            }
+
+            //clawWrist.setPower(gamepad2.left_stick_y/3); // clawWrist control as a continuous servo (CRServo).
+
 //          clawLeft.setDirection(Servo.Direction.REVERSE);
 
 //          if (gamepad2.a) {clawLeft.setPosition(0.8);} else {clawLeft.setPosition(1);}
@@ -125,9 +136,9 @@ public class IntakeTest extends LinearOpMode{
             clawRight.setPosition(clawRightPositionClosed);
         }
 
-            // DONE: TODO: Arm control on the right joystick up/down, not left/right.
-            leftArm.setPower(-gamepad2.right_stick_y);
-            rightArm.setPower(-gamepad2.right_stick_y);
+            // DONE: TODO: Arm control on the left joystick up/down.
+            leftArm.setPower(-gamepad2.left_stick_y);
+            rightArm.setPower(-gamepad2.left_stick_y);
             //leftArm.setPower(gamepad2.right_trigger-gamepad2.left_trigger);
             //rightArm.setPower(gamepad2.right_trigger-gamepad2.left_trigger);
 
