@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.VisionProcessor;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -43,25 +44,7 @@ public class cameraTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
-        OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
         teamPropMaskPipeline = new TeamPropMaskPipeline();
-        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-        {
-            @Override
-            public void onOpened()
-            {
-                camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
-            }
-            @Override
-            public void onError(int errorCode)
-            {
-                telemetry.addData("error openCv", errorCode);
-            }
-        });
-
-
         initAprilTag();
 
         // Wait for the DS start button to be touched.
@@ -70,14 +53,13 @@ public class cameraTest extends LinearOpMode {
         telemetry.update();
         waitForStart();
 
-        camera.setPipeline(teamPropMaskPipeline);
 
         if (opModeIsActive()) {
             while (opModeIsActive()) {
                 telemetry.addData("cound", getRuntime());
 
 //                if (gamepad1.a) {
-                    telemetry.addData("Partisian", teamPropMaskPipeline.getLastResults());
+                telemetry.addData("Partisian", teamPropMaskPipeline.getLastResults());
 //                }
                 telemetryAprilTag();
 
@@ -94,11 +76,12 @@ public class cameraTest extends LinearOpMode {
                 // Share the CPU.
 //                sleep(20);
             }
+
+
         }
 
         // Save more CPU resources when camera is no longer needed.
         visionPortal.close();
-
     }   // end method runOpMode()
 
     /**
@@ -150,6 +133,8 @@ public class cameraTest extends LinearOpMode {
 
         // Set and enable the processor.
         builder.addProcessor(aprilTag);
+        builder.addProcessor(teamPropMaskPipeline);
+
 
         // Build the Vision Portal, using the above settings.
         visionPortal = builder.build();
