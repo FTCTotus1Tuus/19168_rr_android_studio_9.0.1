@@ -24,14 +24,14 @@ import java.util.Arrays;
 @Config
 class TeamPropMaskPipeline implements VisionProcessor
 {
-        public static int maskSel = 3, minHue = 80, minSaturation = 0, minValue = 20 , maxHue = 117, maxSaturation = 300, maxValue = 200, lastResults = 1, frameWidth, frameHeight;
-        Rect firstThird, secondThird, thirdThird;
-        double avgFirstThird, avgSecondThird, avgThirdThird;
-        Mat workingMat1 = new Mat(), workingMat2 = new Mat(), workingMat3 = new Mat();
-        Mat mask1 = new Mat(), mask2 = new Mat(), mask3 = new Mat();
+    public static int maskSel = 3, minHue = 80, minSaturation = 0, minValue = 20 , maxHue = 117, maxSaturation = 300, maxValue = 200, lastResults = 1, frameWidth, frameHeight;
+    Rect firstThird, secondThird, thirdThird;
+    double avgFirstThird, avgSecondThird, avgThirdThird;
+    Mat workingMat1 = new Mat(), workingMat2 = new Mat(), workingMat3 = new Mat();
+    Mat mask1 = new Mat(), mask2 = new Mat(), mask3 = new Mat();
 
-        public static double clawPositionL;
-        public static double clawPositionR;
+    public static double clawPositionL;
+    public static double clawPositionR;
 
 
 
@@ -51,7 +51,7 @@ class TeamPropMaskPipeline implements VisionProcessor
 
 //            workingMat1.release();
 //            workingMat2.release();
-//            workingMat3.release();
+            workingMat3.release();
 //
 //            mask1.release();
 //            mask2.release();
@@ -95,7 +95,7 @@ class TeamPropMaskPipeline implements VisionProcessor
 
         workingMat1.release();
         workingMat2.release();
-        workingMat3.release();
+//        workingMat3.release();
 
         mask1.release();
         mask2.release();

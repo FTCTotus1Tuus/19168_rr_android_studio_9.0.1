@@ -59,7 +59,7 @@ public class cameraTest extends LinearOpMode {
                 telemetry.addData("cound", getRuntime());
 
 //                if (gamepad1.a) {
-                    telemetry.addData("Partisian", teamPropMaskPipeline.getLastResults());
+                telemetry.addData("Partisian", teamPropMaskPipeline.getLastResults());
 //                }
                 telemetryAprilTag();
 
