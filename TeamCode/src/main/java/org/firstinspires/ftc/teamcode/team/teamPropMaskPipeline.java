@@ -51,7 +51,7 @@ class TeamPropMaskPipeline implements VisionProcessor
 
 //            workingMat1.release();
 //            workingMat2.release();
-//            workingMat3.release();
+            workingMat3.release();
 //
 //            mask1.release();
 //            mask2.release();
@@ -95,7 +95,7 @@ class TeamPropMaskPipeline implements VisionProcessor
 
         workingMat1.release();
         workingMat2.release();
-        workingMat3.release();
+//        workingMat3.release();
 
         mask1.release();
         mask2.release();
