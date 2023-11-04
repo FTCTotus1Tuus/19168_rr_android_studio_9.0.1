@@ -87,12 +87,7 @@ public class DriverControl extends LinearOpMode{
             // Load pixels
             leftIntake.setPower(1);
             rightIntake.setPower(-1);
-        } else {
-            // Stop
-            leftIntake.setPower(0);
-            rightIntake.setPower(0);
-        }
-        if(gamepad1.right_trigger>0) {
+        } else if(gamepad1.right_trigger>0) {
             // Eject pixels
             leftIntake.setPower(-1);
             rightIntake.setPower(1);
@@ -106,11 +101,7 @@ public class DriverControl extends LinearOpMode{
         if (gamepad1.left_bumper) {
             // Load pixels
             feeder.setPower(-1);
-        } else {
-            // Stop
-            feeder.setPower(0);
-        }
-        if (gamepad1.left_trigger>0){
+        } else if (gamepad1.left_trigger>0){
             // Eject pixels
             feeder.setPower(1);
         } else {
