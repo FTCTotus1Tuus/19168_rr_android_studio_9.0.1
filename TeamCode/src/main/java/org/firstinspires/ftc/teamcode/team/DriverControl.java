@@ -17,6 +17,10 @@ public class DriverControl extends LinearOpMode{
     Servo clawWrist;
     Servo clawLeft;
     Servo clawRight;
+
+    double clawWristPositionPickup=0.7;
+    double clawWristPositionDrop=0.3;
+
     // l open is 0.4 closed is 0.1
     // r open is 0.6 closed is 0.9 for claw servos
     double clawLeftPositionOpen=0.4;
@@ -73,9 +77,8 @@ public class DriverControl extends LinearOpMode{
             runArmSystem();
             runDriveSystem();
 
-            if (gamepad2.y) {
-                runMacro("ReadyToPickup");
-            }
+            runMacro("ReadyToPickup");
+            runMacro("ReadyToDrop");
         }
     }
 
@@ -134,13 +137,14 @@ public class DriverControl extends LinearOpMode{
     public void setWristPosition( String position){
         switch( position ){
             case "pickup":
-                clawWrist.setPosition(0.7);
+                clawWrist.setPosition(clawWristPositionPickup);
                 break;
             case "drop":
-                clawWrist.setPosition(0.3);
+                clawWrist.setPosition(clawWristPositionDrop);
                 break;
             default:
                 // do nothing;
+                break;
         }
     }
 
@@ -176,14 +180,17 @@ public class DriverControl extends LinearOpMode{
         //leftArm.setPower(gamepad2.right_trigger-gamepad2.left_trigger);
         //rightArm.setPower(gamepad2.right_trigger-gamepad2.left_trigger);
     }
-    public void setArmPosition( String position){
+    public void setArmPosition( String position ){
+        double power = 0.8;
         switch( position ){
             case "in":
                 // TODO: power the arm down until it reaches the stopping position. Then turn off the power.
-                leftArm.setPower(-1);
-                rightArm.setPower(-1);
+                leftArm.setPower(-power);
+                rightArm.setPower(-power);
                 break;
             case "out":
+                leftArm.setPower(power);
+                rightArm.setPower(power);
                 break;
             default:
                 // do nothing;
@@ -201,12 +208,34 @@ public class DriverControl extends LinearOpMode{
     public void runMacro( String macro ){
         switch( macro ) {
             case "ReadyToPickup":
-                setWristPosition("pickup");
-                setClawPosition("open");
-                setArmPosition("in");
+                if (gamepad2.y) {
+                    if (clawWrist.getPosition() < clawWristPositionPickup){
+                        // If the wrist is already in PICKUP position, do nothing.
+                        setWristPosition("pickup");
+                    }
+                    if( clawLeft.getPosition() < clawLeftPositionOpen){
+                        // If the claw is already in OPEN position, do nothing.
+                        setClawPosition("open");
+                    }
+                }
+                while (gamepad2.y) {
+                    setArmPosition("in");
+                }
+                break;
+            case "ReadyToDrop":
+                if (gamepad2.a) {
+                    if (clawWrist.getPosition() > clawWristPositionDrop){
+                        // Only raise the wrist if it's not already in position.
+                        setWristPosition("drop");
+                    }
+                }
+                while (gamepad2.a) {
+                    setArmPosition("out");
+                }
                 break;
             default:
                 // do nothing;
+                break;
         }
     }
 
