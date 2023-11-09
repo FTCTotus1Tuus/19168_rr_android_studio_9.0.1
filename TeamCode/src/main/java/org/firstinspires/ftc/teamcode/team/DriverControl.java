@@ -22,13 +22,8 @@ public class DriverControl extends DarienOpMode{
             runArmSystem();
             runDriveSystem();
 
-            if (gamepad2.y) {
-                runMacro("ReadyToPickup");
-            }
+            runMacro("ReadyToPickup");
+            runMacro("ReadyToDrop");
         }
     }
-
-
-
-
 }
