@@ -40,9 +40,9 @@ class TeamPropMaskPipeline implements VisionProcessor
     public static double clawPositionL;
     public static double clawPositionR;
 
-    public TeamPropMaskPipeline(boolean colour) {
+    public TeamPropMaskPipeline(boolean isBlue) {
         // true = blue false = red
-        if (colour) {
+        if (isBlue) {
             minHue = minHueB;
             minSaturation = minSaturationB;
             minValue = minValueB;
@@ -133,11 +133,5 @@ class TeamPropMaskPipeline implements VisionProcessor
 
     @Override
     public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext) {
-        Bitmap bmp = null;
-        Mat tmp = new Mat (onscreenHeight, onscreenWidth, CvType.CV_8U, new Scalar(4));
-        //Imgproc.cvtColor(seedsImage, tmp, Imgproc.COLOR_RGB2BGRA);
-        Imgproc.cvtColor(workingMat3, tmp, Imgproc.COLOR_GRAY2RGBA, 4);
-        bmp = Bitmap.createBitmap(tmp.cols(), tmp.rows(), Bitmap.Config.ARGB_8888);
-        Utils.matToBitmap(tmp, bmp);
-        canvas.setBitmap(bmp);
+
 }}

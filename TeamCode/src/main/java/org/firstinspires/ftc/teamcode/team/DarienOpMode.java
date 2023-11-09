@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -30,6 +29,8 @@ public class DarienOpMode extends LinearOpMode {
     public double clawLeftPositionClosed=0.08;
     public double clawRightPositionOpen=0.6;
     public double clawRightPositionClosed=0.93;
+
+    public static int armOutPosition = 750;
 
     public double[] direction = {0.0,0.0};
     public double rotation;
@@ -139,13 +140,24 @@ public class DarienOpMode extends LinearOpMode {
         rightArm.setPower(-gamepad2.left_stick_y);
         //leftArm.setPower(gamepad2.right_trigger-gamepad2.left_trigger);
         //rightArm.setPower(gamepad2.right_trigger-gamepad2.left_trigger);
-        int leftArmPos;
-        leftArmPos = leftArm.getCurrentPosition();
-        telemetry.addData("Left Arm Position: ", leftArmPos);
-        telemetry.update();
+    }
+
+    public void setArmPosition(String position){
+        rightArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        switch (position){
+            case "out":
+                rightArm.setTargetPosition(armOutPosition);
+                leftArm.setTargetPosition(armOutPosition);
+            case "in":
+                rightArm.setTargetPosition(0);
+                leftArm.setTargetPosition(0);
+        }
+        rightArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
     }
-    public void setArmPosition( String position ){
+    public void driveArm( String position ){
         double power = 0.8;
         switch( position ){
             case "in":
@@ -184,7 +196,7 @@ public class DarienOpMode extends LinearOpMode {
                     }
                 }
                 while (gamepad2.y) {
-                    setArmPosition("in");
+                    driveArm("in");
                 }
                 break;
             case "ReadyToDrop":
@@ -195,7 +207,7 @@ public class DarienOpMode extends LinearOpMode {
                     }
                 }
                 while (gamepad2.a) {
-                    setArmPosition("out");
+                    driveArm("out");
                 }
                 break;
             default:
@@ -227,8 +239,9 @@ public class DarienOpMode extends LinearOpMode {
     }
 
 
-    public void initCamera(boolean colour) {
-            teamPropMaskPipeline = new TeamPropMaskPipeline(colour);
+    public void initCamera(boolean isBlue) {
+            // true = blue false = red
+            teamPropMaskPipeline = new TeamPropMaskPipeline(isBlue);
             // Create the AprilTag processor.
             aprilTag = new AprilTagProcessor.Builder().build();
 
@@ -250,7 +263,8 @@ public class DarienOpMode extends LinearOpMode {
         }   // end method initAprilTag()
 
 
-    public void initControls() {
+    public void initControls(boolean isAuto) {
+        //isAuto: true=auto false=teleop
         omniMotor0 = initializeMotor("omniMotor0");
         omniMotor1 = initializeMotor("omniMotor3");
         omniMotor2 = initializeMotor("omniMotor1");
@@ -260,6 +274,12 @@ public class DarienOpMode extends LinearOpMode {
         rightArm = initializeMotor("rightArm");
 
         leftArm.setDirection(DcMotor.Direction.REVERSE);
+
+        if (isAuto) {
+            leftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rightArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+
 
         omniMotor0.setDirection(DcMotor.Direction.REVERSE);
         omniMotor1.setDirection(DcMotor.Direction.FORWARD);

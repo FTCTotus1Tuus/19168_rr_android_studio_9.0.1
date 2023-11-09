@@ -9,7 +9,7 @@ public class DriverControl extends DarienOpMode{
 
     public void runOpMode(){
 
-        initControls();
+        initControls(false);
 
         waitForStart();
 
