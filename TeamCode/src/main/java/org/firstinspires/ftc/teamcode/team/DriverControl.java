@@ -52,6 +52,8 @@ public class DriverControl extends LinearOpMode{
         rightArm = initializeMotor("rightArm");
 
         leftArm.setDirection(DcMotor.Direction.REVERSE);
+        leftArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         omniMotor0.setDirection(DcMotor.Direction.REVERSE);
         omniMotor1.setDirection(DcMotor.Direction.FORWARD);
@@ -170,6 +172,11 @@ public class DriverControl extends LinearOpMode{
         rightArm.setPower(-gamepad2.left_stick_y);
         //leftArm.setPower(gamepad2.right_trigger-gamepad2.left_trigger);
         //rightArm.setPower(gamepad2.right_trigger-gamepad2.left_trigger);
+        int leftArmPos;
+        leftArmPos = leftArm.getCurrentPosition();
+        telemetry.addData("Left Arm Position: ", leftArmPos);
+        telemetry.update();
+
     }
     public void setArmPosition( String position ){
         double power = 0.8;
