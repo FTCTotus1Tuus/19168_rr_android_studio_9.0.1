@@ -44,7 +44,7 @@ public class cameraTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        teamPropMaskPipeline = new TeamPropMaskPipeline();
+        teamPropMaskPipeline = new TeamPropMaskPipeline(true);
         initAprilTag();
 
         // Wait for the DS start button to be touched.

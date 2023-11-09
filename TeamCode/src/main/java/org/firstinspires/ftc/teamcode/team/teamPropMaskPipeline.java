@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.team;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -11,7 +12,9 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.CameraC
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.VisionProcessor;
+import org.opencv.android.Utils;
 import org.opencv.core.Core;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
@@ -24,7 +27,11 @@ import java.util.Arrays;
 @Config
 class TeamPropMaskPipeline implements VisionProcessor
 {
-    public static int maskSel = 3, minHue = 80, minSaturation = 0, minValue = 20 , maxHue = 117, maxSaturation = 300, maxValue = 200, lastResults = 1, frameWidth, frameHeight;
+    public static int minHueR = 0, minSaturationR = 40, minValueR = 0 , maxHueR = 10, maxSaturationR = 260, maxValueR = 300,
+                      minHueB = 70, minSaturationB = 100, minValueB = 0 , maxHueB = 117, maxSaturationB = 260, maxValueB = 300,
+
+            lastResults = 1, frameWidth, frameHeight;
+    int minHue, minSaturation, minValue, maxHue, maxSaturation, maxValue;
     Rect firstThird, secondThird, thirdThird;
     double avgFirstThird, avgSecondThird, avgThirdThird;
     Mat workingMat1 = new Mat(), workingMat2 = new Mat(), workingMat3 = new Mat();
@@ -33,7 +40,24 @@ class TeamPropMaskPipeline implements VisionProcessor
     public static double clawPositionL;
     public static double clawPositionR;
 
-
+    public TeamPropMaskPipeline(boolean colour) {
+        // true = blue false = red
+        if (colour) {
+            minHue = minHueB;
+            minSaturation = minSaturationB;
+            minValue = minValueB;
+            maxHue = maxHueB;
+            maxSaturation = maxSaturationB;
+            maxValue = maxValueB;
+        } else {
+            minHue = minHueR;
+            minSaturation = minSaturationR;
+            minValue = minValueR;
+            maxHue = maxHueR;
+            maxSaturation = maxSaturationR;
+            maxValue = maxValueR;
+        }
+    }
 
 
     public int getLastResults() {
@@ -51,7 +75,7 @@ class TeamPropMaskPipeline implements VisionProcessor
 
 //            workingMat1.release();
 //            workingMat2.release();
-            workingMat3.release();
+//            workingMat3.release();
 //
 //            mask1.release();
 //            mask2.release();
@@ -95,7 +119,7 @@ class TeamPropMaskPipeline implements VisionProcessor
 
         workingMat1.release();
         workingMat2.release();
-//        workingMat3.release();
+        workingMat3.release();
 
         mask1.release();
         mask2.release();
@@ -109,6 +133,11 @@ class TeamPropMaskPipeline implements VisionProcessor
 
     @Override
     public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext) {
-
-    }
-}
+        Bitmap bmp = null;
+        Mat tmp = new Mat (onscreenHeight, onscreenWidth, CvType.CV_8U, new Scalar(4));
+        //Imgproc.cvtColor(seedsImage, tmp, Imgproc.COLOR_RGB2BGRA);
+        Imgproc.cvtColor(workingMat3, tmp, Imgproc.COLOR_GRAY2RGBA, 4);
+        bmp = Bitmap.createBitmap(tmp.cols(), tmp.rows(), Bitmap.Config.ARGB_8888);
+        Utils.matToBitmap(tmp, bmp);
+        canvas.setBitmap(bmp);
+}}
