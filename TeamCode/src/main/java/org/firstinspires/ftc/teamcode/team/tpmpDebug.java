@@ -17,11 +17,35 @@ import java.util.Arrays;
 @Config
 class tpmpDebug extends OpenCvPipeline
 {
-    public static int maskSel = 3, minHue = 80, minSaturation = 0, minValue = 20 , maxHue = 117, maxSaturation = 300, maxValue = 200, lastResults = 1, frameWidth, frameHeight;
+    public static int minHueR = 0, minSaturationR = 40, minValueR = 0 , maxHueR = 10, maxSaturationR = 260, maxValueR = 300,
+            minHueB = 70, minSaturationB = 100, minValueB = 0 , maxHueB = 117, maxSaturationB = 260, maxValueB = 300,
+
+    lastResults = 1, frameWidth, frameHeight;
+    int minHue, minSaturation, minValue, maxHue, maxSaturation, maxValue;
+
     Rect firstThird, secondThird, thirdThird;
     double avgFirstThird, avgSecondThird, avgThirdThird;
     Mat workingMat1 = new Mat(), workingMat2 = new Mat(), workingMat3 = new Mat();
     Mat mask1 = new Mat(), mask2 = new Mat(), mask3 = new Mat();
+
+    public tpmpDebug(boolean isBlue) {
+        // true = blue false = red
+        if (isBlue) {
+            minHue = minHueB;
+            minSaturation = minSaturationB;
+            minValue = minValueB;
+            maxHue = maxHueB;
+            maxSaturation = maxSaturationB;
+            maxValue = maxValueB;
+        } else {
+            minHue = minHueR;
+            minSaturation = minSaturationR;
+            minValue = minValueR;
+            maxHue = maxHueR;
+            maxSaturation = maxSaturationR;
+            maxValue = maxValueR;
+        }
+    }
     @Override
     public Mat processFrame(Mat input) {
 

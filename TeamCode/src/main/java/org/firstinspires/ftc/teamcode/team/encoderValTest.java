@@ -20,6 +20,9 @@ public class encoderValTest extends DarienOpMode {
             } else if (gamepad1.x) {
                 MoveY(5, power);
             }
+            else if (gamepad1.y) {
+                setArmPosition(250, 0.1);
+            }
         }
     }
 }

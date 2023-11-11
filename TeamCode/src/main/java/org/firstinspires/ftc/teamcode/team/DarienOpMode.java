@@ -127,6 +127,7 @@ public class DarienOpMode extends LinearOpMode {
                 break;
             case "dropGround":
                 clawWrist.setPosition(clawWristPositionGround);
+                break;
             default:
                 // do nothing;
         }
@@ -153,6 +154,18 @@ public class DarienOpMode extends LinearOpMode {
                 clawLeft.setPosition(clawLeftPositionClosed);
                 clawRight.setPosition(clawRightPositionClosed);
                 break;
+            case "leftOpen":
+                clawLeft.setPosition(clawLeftPositionOpen);
+                break;
+            case "rightOpen":
+                clawRight.setPosition(clawRightPositionOpen);
+                break;
+            case "leftClosed":
+                clawLeft.setPosition(clawLeftPositionClosed);
+                break;
+            case "rightClosed":
+                clawRight.setPosition(clawRightPositionClosed);
+                break;
             default:
                 // do nothing;
         }
@@ -166,20 +179,16 @@ public class DarienOpMode extends LinearOpMode {
         //rightArm.setPower(gamepad2.right_trigger-gamepad2.left_trigger);
     }
 
-    public void setArmPosition(String position) {
-        rightArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        switch (position) {
-            case "out":
-                rightArm.setTargetPosition(armOutPosition);
-                leftArm.setTargetPosition(armOutPosition);
-            case "in":
-                rightArm.setTargetPosition(0);
-                leftArm.setTargetPosition(0);
-        }
+    public void setArmPosition(int position, double power) {
+        //positive is out
+        rightArm.setTargetPosition(position);
+        leftArm.setTargetPosition(position);
+
         rightArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+        rightArm.setPower(power);
+        leftArm.setPower(power);
     }
 
     public void driveArm(String position) {
@@ -235,6 +244,23 @@ public class DarienOpMode extends LinearOpMode {
                 while (gamepad2.a) {
                     driveArm("out");
                 }
+                break;
+            default:
+                // do nothing;
+                break;
+        }
+    }
+    public void autoRunMacro(String macro) {
+        switch (macro) {
+            case "ReadyToPickup":
+                setWristPosition("pickup");
+                setClawPosition("open");
+                setArmPosition(50,0.1);
+                break;
+            case "dropAtTeamProp":
+                //always put purple pixel to the left
+                setClawPosition("open");
+                sleep(1000);
                 break;
             default:
                 // do nothing;
@@ -355,21 +381,21 @@ public class DarienOpMode extends LinearOpMode {
     }
 
     public void AutoRotate(double TargetPosDegrees, double power, int direction) {
+        //direction counter clockwise is -1 clockwise is 1
         setToRotateRunMode();
         double initError = Math.abs(TargetPosDegrees-getRawHeading());
         double truePower;
         double error;
         double scaleConstant = initError;
         boolean isRotating = true;
-        //TODO fix rotation: speed lowers too fast
         while (isRotating) {
             error = Math.abs(TargetPosDegrees-getRawHeading());
-            truePower = Math.min(Math.pow((error/scaleConstant),2),1);
+//            truePower = Math.min(Math.pow((error/scaleConstant),2),1);
             telemetry.addData("heading ", getRawHeading());
             telemetry.addData("error ", error);
-            print("", truePower*power);
+            print("", power);
 
-            setRotatePower(truePower*power, direction);
+            setRotatePower(power, direction);
             if (error<rotationTolerance) {
                 isRotating = false;
                 setRotatePower(0,0);
@@ -392,20 +418,20 @@ public class DarienOpMode extends LinearOpMode {
         public void setTargetPosY ()
         {
 
-            omniMotor0.setTargetPosition(-encoderPos);
-            omniMotor1.setTargetPosition(-encoderPos);
-            omniMotor2.setTargetPosition(encoderPos);
-            omniMotor3.setTargetPosition(encoderPos);
+            omniMotor0.setTargetPosition(encoderPos);
+            omniMotor1.setTargetPosition(encoderPos);
+            omniMotor2.setTargetPosition(-encoderPos);
+            omniMotor3.setTargetPosition(-encoderPos);
 
         }
 
         public void setTargetPosX ()
         {
 
-            omniMotor0.setTargetPosition(-encoderPos);
-            omniMotor1.setTargetPosition(encoderPos);
-            omniMotor2.setTargetPosition(-encoderPos);
-            omniMotor3.setTargetPosition(encoderPos);
+            omniMotor0.setTargetPosition(encoderPos);
+            omniMotor1.setTargetPosition(-encoderPos);
+            omniMotor2.setTargetPosition(encoderPos);
+            omniMotor3.setTargetPosition(-encoderPos);
 
         }
 
