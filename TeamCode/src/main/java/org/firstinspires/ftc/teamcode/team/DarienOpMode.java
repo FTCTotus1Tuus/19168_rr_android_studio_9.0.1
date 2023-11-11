@@ -11,7 +11,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+
+import java.util.List;
 
 @Config
 public class DarienOpMode extends LinearOpMode {
@@ -209,9 +212,9 @@ public class DarienOpMode extends LinearOpMode {
     }
 
     public void runDriveSystem() {
-        direction[0] = -gamepad1.left_stick_x;
-        direction[1] = -gamepad1.left_stick_y;
-        rotation = -gamepad1.right_stick_x;
+        direction[0] = (Math.pow(-gamepad1.left_stick_x, 7) -gamepad1.left_stick_x)/2;
+        direction[1] = (Math.pow(-gamepad1.left_stick_y, 7) -gamepad1.left_stick_y)/2;
+        rotation = (Math.pow(-gamepad1.right_stick_x, 7) -gamepad1.right_stick_x) / 2;
         turboBoost = gamepad1.left_stick_button;
 
         MoveRobot(direction, -rotation, turboBoost);
@@ -257,10 +260,13 @@ public class DarienOpMode extends LinearOpMode {
                 setClawPosition("open");
                 setArmPosition(50,0.1);
                 break;
-            case "dropAtTeamProp":
+            case "dropPixel":
                 //always put purple pixel to the left
                 setClawPosition("open");
                 sleep(1000);
+                break;
+            case "ReadyToDrop":
+                setWristPosition("drop");
                 break;
             default:
                 // do nothing;
@@ -357,8 +363,76 @@ public class DarienOpMode extends LinearOpMode {
 
         feeder = hardwareMap.get(CRServo.class, "feeder");
     }
+    public void backDropPlace(boolean isBlue, int propPosition) {
+        // didnt place properly
+        // move less forwards
+        // wait for motors
+        boolean pixelPlaced = false;
+        int iter = 0;
+        int offset = isBlue ? 0 : 3;
 
-    public void MoveY(int y, double power) {
+        while (!pixelPlaced) {
+            print("test 1","");
+            List<AprilTagDetection> currentDetections = aprilTag.getDetections(); // gets all april tags in view
+            print("test 2", "");
+            AprilTagDetection trueDetection = null;
+
+            for (AprilTagDetection detection : currentDetections) {
+                if (detection.metadata != null && detection.id == propPosition + offset) {
+                    telemetry.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
+                    telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
+                    telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw));
+                    telemetry.addLine(String.format("RBE %6.1f %6.1f %6.1f  (inch, deg, deg)", detection.ftcPose.range, detection.ftcPose.bearing, detection.ftcPose.elevation));
+                    telemetry.update();
+
+
+                    trueDetection = detection;
+                    imu.resetYaw();
+                    AutoRotate(trueDetection.ftcPose.yaw, 0.1, 0); // aligns robot perpendicular to aprilTag
+
+                    MoveX(trueDetection.ftcPose.x, 0.1); // aligns x to aprilTag
+                    waitForMotors();
+
+                    autoPlacePixel(trueDetection); // moves forward and places pixel
+
+                    pixelPlaced = true;
+
+                }
+            }
+            if (trueDetection == null) {
+                MoveX(1, 0.3);
+                iter++;
+                waitForMotors();
+            }
+
+            if (iter >= 10) {
+                print("timed out", "");
+                MoveX(-5, 0.1);
+                waitForMotors();
+                if (!aprilTag.getDetections().isEmpty()) {
+                    autoPlacePixel(aprilTag.getDetections().get(0));
+                } else {
+                    autoPlacePixel(null);
+                }
+                pixelPlaced = true;
+            }
+        }
+    }
+
+    public void autoPlacePixel(AprilTagDetection detection) {
+        if (detection == null) { // place w/o april tag
+            MoveY(13.5, 0.2); // moves to place distance
+            waitForMotors();
+            autoRunMacro("dropPixel"); //places
+        } else { // place w april tag
+            MoveY(detection.ftcPose.y-5.5, 0.2); // moves to place distance
+            waitForMotors();
+            autoRunMacro("dropPixel"); // places
+        }
+        autoRunMacro("ReadyToPickup"); // returns
+    }
+
+    public void MoveY(double y, double power) {
 
         resetEncoder();
         encoderPos = (int) Math.floor((y * constant + 0.5));
@@ -370,7 +444,7 @@ public class DarienOpMode extends LinearOpMode {
     }
 
 
-    public void MoveX(int x, double power) {
+    public void MoveX(double x, double power) {
         resetEncoder();
 
         encoderPos = (int) Math.floor((x * constant * 1.111111) + 0.5);
@@ -388,6 +462,12 @@ public class DarienOpMode extends LinearOpMode {
         double error;
         double scaleConstant = initError;
         boolean isRotating = true;
+
+        if (direction == 0) {
+            if ((TargetPosDegrees-getRawHeading()) > 0) {direction=-1;}
+            else {direction = 1;}
+        }
+
         while (isRotating) {
             error = Math.abs(TargetPosDegrees-getRawHeading());
 //            truePower = Math.min(Math.pow((error/scaleConstant),2),1);
@@ -408,7 +488,7 @@ public class DarienOpMode extends LinearOpMode {
     }
         public double sigmoid(double x) {
         //takes in any x value returns from (0,0) to (1,1) scale x accordingly
-        return (1/(1+Math.pow(2.71,(-8*x+4))));
+        return (2/(1+Math.pow(2.71,(-4*x))))-1;
         }
         public double getVoltage () {
             return (hardwareMap.voltageSensor.iterator().next().getVoltage());
