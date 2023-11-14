@@ -44,7 +44,12 @@ public class cameraDebugTest extends LinearOpMode {
                 while (opModeIsActive()) {
                     telemetry.addData("cound", getRuntime());
 
-//                if (gamepad1.a) {
                     telemetry.addData("Partisian", tpmpDebug.getLastResults());
-//                }
+                    telemetry.update();
+
+                    if (gamepad1.a) {
+                    tpmpDebug.setColour(true);}
+                    else if (gamepad1.b) {
+                        tpmpDebug.setColour(false);
+                    }
                 }}}}

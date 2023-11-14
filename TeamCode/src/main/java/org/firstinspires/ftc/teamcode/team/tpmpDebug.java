@@ -30,6 +30,10 @@ class tpmpDebug extends OpenCvPipeline
 
     public tpmpDebug(boolean isBlue) {
         // true = blue false = red
+        setColour(isBlue);
+    }
+    public void setColour(boolean isBlue) {
+        // true = blue false = red
         if (isBlue) {
             minHue = minHueB;
             minSaturation = minSaturationB;

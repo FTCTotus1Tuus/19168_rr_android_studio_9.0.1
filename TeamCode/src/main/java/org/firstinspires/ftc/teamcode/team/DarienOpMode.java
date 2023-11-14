@@ -258,7 +258,7 @@ public class DarienOpMode extends LinearOpMode {
             case "ReadyToPickup":
                 setWristPosition("pickup");
                 setClawPosition("open");
-                setArmPosition(50,0.1);
+                setArmPosition(10,0.3);
                 break;
             case "dropPixel":
                 //always put purple pixel to the left
@@ -372,6 +372,9 @@ public class DarienOpMode extends LinearOpMode {
         int offset = isBlue ? 0 : 3;
 
         while (!pixelPlaced) {
+            // TODO yellow pixel not fully consistant
+            // TODO arm not working?
+            // TODO make other auto poses
             print("test 1","");
             List<AprilTagDetection> currentDetections = aprilTag.getDetections(); // gets all april tags in view
             print("test 2", "");
@@ -396,7 +399,7 @@ public class DarienOpMode extends LinearOpMode {
                     autoPlacePixel(trueDetection); // moves forward and places pixel
 
                     pixelPlaced = true;
-
+                    return;
                 }
             }
             if (trueDetection == null) {
@@ -407,29 +410,49 @@ public class DarienOpMode extends LinearOpMode {
 
             if (iter >= 10) {
                 print("timed out", "");
-                MoveX(-5, 0.1);
-                waitForMotors();
+                if (isBlue) {
+                 MoveX(5,0.1);
+                }
+                else {
+                    switch (propPosition) {
+                        case 3:
+                            break;
+                        case 2:
+                            MoveX(-9, 0.1);
+                            waitForMotors();
+                            break;
+                        case 1:
+                            MoveX(-12.5, 0.1);
+                            waitForMotors();
+                            break;
+                    }
+                }
                 if (!aprilTag.getDetections().isEmpty()) {
                     autoPlacePixel(aprilTag.getDetections().get(0));
                 } else {
                     autoPlacePixel(null);
                 }
                 pixelPlaced = true;
+                return;
             }
         }
     }
 
     public void autoPlacePixel(AprilTagDetection detection) {
         if (detection == null) { // place w/o april tag
-            MoveY(13.5, 0.2); // moves to place distance
+
+            MoveY(12, 0.2); // moves to place distance
             waitForMotors();
             autoRunMacro("dropPixel"); //places
         } else { // place w april tag
-            MoveY(detection.ftcPose.y-5.5, 0.2); // moves to place distance
+            MoveY(detection.ftcPose.y-6.5, 0.2); // moves to place distance
             waitForMotors();
             autoRunMacro("dropPixel"); // places
         }
+        MoveY(-1.5, 0.1);
+        waitForMotors();
         autoRunMacro("ReadyToPickup"); // returns
+        return;
     }
 
     public void MoveY(double y, double power) {
