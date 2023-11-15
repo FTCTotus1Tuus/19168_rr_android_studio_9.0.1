@@ -206,6 +206,9 @@ public class DarienOpMode extends LinearOpMode {
                 leftArm.setPower(power);
                 rightArm.setPower(power);
                 break;
+            case "none":
+                leftArm.setPower(0);
+                rightArm.setPower(0);
             default:
                 // do nothing;
         }
@@ -258,7 +261,20 @@ public class DarienOpMode extends LinearOpMode {
             case "ReadyToPickup":
                 setWristPosition("pickup");
                 setClawPosition("open");
-                setArmPosition(10,0.3);
+
+                sleep(50);
+
+                leftArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                rightArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+                driveArm("in");
+                sleep(200);
+                driveArm("none");
+
+                leftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                leftArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                rightArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                rightArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 break;
             case "dropPixel":
                 //always put purple pixel to the left
@@ -367,75 +383,92 @@ public class DarienOpMode extends LinearOpMode {
         // didnt place properly
         // move less forwards
         // wait for motors
-        boolean pixelPlaced = false;
-        int iter = 0;
-        int offset = isBlue ? 0 : 3;
-
-        while (!pixelPlaced) {
-            // TODO yellow pixel not fully consistant
-            // TODO arm not working?
-            // TODO make other auto poses
-            print("test 1","");
-            List<AprilTagDetection> currentDetections = aprilTag.getDetections(); // gets all april tags in view
-            print("test 2", "");
-            AprilTagDetection trueDetection = null;
-
-            for (AprilTagDetection detection : currentDetections) {
-                if (detection.metadata != null && detection.id == propPosition + offset) {
-                    telemetry.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
-                    telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
-                    telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw));
-                    telemetry.addLine(String.format("RBE %6.1f %6.1f %6.1f  (inch, deg, deg)", detection.ftcPose.range, detection.ftcPose.bearing, detection.ftcPose.elevation));
-                    telemetry.update();
-
-
-                    trueDetection = detection;
-                    imu.resetYaw();
-                    AutoRotate(trueDetection.ftcPose.yaw, 0.1, 0); // aligns robot perpendicular to aprilTag
-
-                    MoveX(trueDetection.ftcPose.x, 0.1); // aligns x to aprilTag
-                    waitForMotors();
-
-                    autoPlacePixel(trueDetection); // moves forward and places pixel
-
-                    pixelPlaced = true;
-                    return;
-                }
-            }
-            if (trueDetection == null) {
-                MoveX(1, 0.3);
-                iter++;
+//        boolean pixelPlaced = false;
+//        int iter = 0;
+//        int offset = isBlue ? 0 : 3;
+//
+//        while (!pixelPlaced) {
+//            print("test 1","");
+//            List<AprilTagDetection> currentDetections = aprilTag.getDetections(); // gets all april tags in view
+//            print("test 2", "");
+//            AprilTagDetection trueDetection = null;
+//
+//            for (AprilTagDetection detection : currentDetections) {
+//                if (detection.metadata != null && detection.id == propPosition + offset) {
+//                    telemetry.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
+//                    telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
+//                    telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw));
+//                    telemetry.addLine(String.format("RBE %6.1f %6.1f %6.1f  (inch, deg, deg)", detection.ftcPose.range, detection.ftcPose.bearing, detection.ftcPose.elevation));
+//                    telemetry.update();
+//
+//
+//                    trueDetection = detection;
+//                    imu.resetYaw();
+//                    AutoRotate(trueDetection.ftcPose.yaw, 0.1, 0); // aligns robot perpendicular to aprilTag
+//
+//                    MoveX(trueDetection.ftcPose.x, 0.1); // aligns x to aprilTag
+//                    waitForMotors();
+//
+//                    autoPlacePixel(trueDetection); // moves forward and places pixel
+//
+//                    pixelPlaced = true;
+//                    return;
+//                }
+//            }
+//            if (trueDetection == null) {
+//                MoveX(1, 0.3);
+//                iter++;
+//                waitForMotors();
+//            }
+//
+//            if (iter >= 10) {
+//                print("timed out", "");
+//                if (isBlue) {
+//                 MoveX(5,0.1);
+//                }
+//                else {
+//                    switch (propPosition) {
+//                        case 3:
+//                            break;
+//                        case 2:
+//                            MoveX(-9, 0.1);
+//                            waitForMotors();
+//                            break;
+//                        case 1:
+//                            MoveX(-12.5, 0.1);
+//                            waitForMotors();
+//                            break;
+//                    }
+//                }
+//                if (!aprilTag.getDetections().isEmpty()) {
+//                    autoPlacePixel(aprilTag.getDetections().get(0));
+//                } else {
+//                    autoPlacePixel(null);
+//                }
+//                pixelPlaced = true;
+//                return;
+//            }
+        switch (propPosition) {
+            case 1:
+                MoveX(15, 0.3);
                 waitForMotors();
-            }
-
-            if (iter >= 10) {
-                print("timed out", "");
-                if (isBlue) {
-                 MoveX(5,0.1);
-                }
-                else {
-                    switch (propPosition) {
-                        case 3:
-                            break;
-                        case 2:
-                            MoveX(-9, 0.1);
-                            waitForMotors();
-                            break;
-                        case 1:
-                            MoveX(-12.5, 0.1);
-                            waitForMotors();
-                            break;
-                    }
-                }
-                if (!aprilTag.getDetections().isEmpty()) {
-                    autoPlacePixel(aprilTag.getDetections().get(0));
-                } else {
-                    autoPlacePixel(null);
-                }
-                pixelPlaced = true;
-                return;
-            }
+                break;
+            case 2:
+                MoveX(20, 0.3);
+                waitForMotors();
+                break;
+            case 3:
+                MoveX(30, 0.3);
+                waitForMotors();
+                break;
         }
+        AutoRotate(-90, 0.3, -1);
+        MoveY(11, 0.1);
+        waitForMotors();
+        autoRunMacro("dropPixel");
+        MoveY(-1.5, 0.1);
+        waitForMotors();
+        autoRunMacro("ReadyToPickup"); // returns
     }
 
     public void autoPlacePixel(AprilTagDetection detection) {

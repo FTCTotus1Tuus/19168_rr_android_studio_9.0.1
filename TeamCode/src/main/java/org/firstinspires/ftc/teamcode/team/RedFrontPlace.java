@@ -68,18 +68,26 @@ public class RedFrontPlace extends DarienOpMode{
         MoveY(72,0.3); // moves past stage door towards backdrop
         waitForMotors();
             setClawPosition("closed"); // grabs yellow pixel
-        MoveX(20, 0.3);//in front of backdrop
-        sleep(200);
-        setArmPosition(250, 0.2); // extends the arm a tiny bit
-        waitForMotors();
+        AutoRotate(-90, 0.3, 1);
+        setArmPosition(250, 0.1); // extends the arm a tiny bit
+        while (leftArm.isBusy()) {}
         autoRunMacro("ReadyToDrop"); // extends the wrist
         print("pls no crash","");
         backDropPlace(false, propPosition);
-
-        sleep(250);
-        //Parking
-        MoveX(-24, 0.2);
-        waitForMotors();
+        switch (propPosition) {
+            case 1:
+                MoveX(-15, 0.3);
+                waitForMotors();
+                break;
+            case 2:
+                MoveX(-24, 0.3);
+                waitForMotors();
+                break;
+            case 3:
+                MoveX(-33, 0.3);
+                waitForMotors();
+                break;
+        }
         MoveY(10, 0.05);
         waitForMotors();
     }
