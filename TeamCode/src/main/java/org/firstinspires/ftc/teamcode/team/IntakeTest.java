@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.team;
 import static org.firstinspires.ftc.teamcode.team.TeamPropMaskPipeline.clawPositionL;
 import static org.firstinspires.ftc.teamcode.team.TeamPropMaskPipeline.clawPositionR;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -13,6 +14,7 @@ import com.qualcomm.robotcore.*;
 import java.util.*;
 import java.io.*;
 
+@Disabled
 @TeleOp
 
 public class IntakeTest extends LinearOpMode{

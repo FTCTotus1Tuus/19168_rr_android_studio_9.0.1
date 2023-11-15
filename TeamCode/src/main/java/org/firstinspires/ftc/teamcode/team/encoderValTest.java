@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode.team;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
+@Disabled
 @TeleOp
 public class encoderValTest extends DarienOpMode {
     public void runOpMode() {

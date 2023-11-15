@@ -448,6 +448,24 @@ public class DarienOpMode extends LinearOpMode {
 //                pixelPlaced = true;
 //                return;
 //            }
+        if (isBlue) {
+            //TODO fix case 1v3 and dist to move forwards
+            switch (propPosition) {
+                case 1:
+                    MoveX(-20, 0.3);
+                    waitForMotors();
+                    break;
+                case 2:
+                    MoveX(-24, 0.3);
+                    waitForMotors();
+                    break;
+                case 3:
+                    MoveX(-29, 0.3);
+                    waitForMotors();
+                    break;
+            } AutoRotate(90, 0.3, 1);
+        }
+        else {
         switch (propPosition) {
             case 1:
                 MoveX(15, 0.3);
@@ -458,30 +476,17 @@ public class DarienOpMode extends LinearOpMode {
                 waitForMotors();
                 break;
             case 3:
-                MoveX(30, 0.3);
+                MoveX(29, 0.3);
                 waitForMotors();
                 break;
-        }
-        AutoRotate(-90, 0.3, -1);
-        MoveY(11, 0.1);
-        waitForMotors();
-        autoRunMacro("dropPixel");
-        MoveY(-1.5, 0.1);
-        waitForMotors();
-        autoRunMacro("ReadyToPickup"); // returns
+        }        AutoRotate(-90, 0.3, -1);}
+        autoPlacePixel();
     }
 
-    public void autoPlacePixel(AprilTagDetection detection) {
-        if (detection == null) { // place w/o april tag
-
-            MoveY(12, 0.2); // moves to place distance
-            waitForMotors();
-            autoRunMacro("dropPixel"); //places
-        } else { // place w april tag
-            MoveY(detection.ftcPose.y-6.5, 0.2); // moves to place distance
-            waitForMotors();
-            autoRunMacro("dropPixel"); // places
-        }
+    public void autoPlacePixel() {
+        MoveY(12, 0.1);
+        waitForMotors();
+        autoRunMacro("dropPixel");
         MoveY(-1.5, 0.1);
         waitForMotors();
         autoRunMacro("ReadyToPickup"); // returns
