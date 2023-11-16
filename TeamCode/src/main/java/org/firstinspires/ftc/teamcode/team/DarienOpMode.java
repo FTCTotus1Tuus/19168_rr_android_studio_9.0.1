@@ -22,6 +22,7 @@ public class DarienOpMode extends LinearOpMode {
     public CRServo leftIntake;
     public CRServo rightIntake;
     public CRServo feeder;
+    public CRServo droneLauncher;
 
     public Servo clawWrist;
     public Servo clawLeft;
@@ -72,9 +73,14 @@ public class DarienOpMode extends LinearOpMode {
     public AprilTagProcessor aprilTag;
 
     @Override
-    public void runOpMode() throws InterruptedException {
-    }
+    public void runOpMode() throws InterruptedException {}
 
+    public void runDroneSystem(){
+        if(gamepad2.left_stick_button && gamepad2.b){
+            droneLauncher.setPower(0.5);
+            sleep(500);
+        }
+    }
     public void runIntakeSystem() {
         if (gamepad1.right_bumper) {
             // Load pixels
@@ -378,6 +384,7 @@ public class DarienOpMode extends LinearOpMode {
         clawRight = hardwareMap.get(Servo.class, "clawRight");
 
         feeder = hardwareMap.get(CRServo.class, "feeder");
+        droneLauncher = hardwareMap.get(CRServo.class, "droneLauncher");
     }
     public void backDropPlace(boolean isBlue, int propPosition) {
         // didnt place properly
@@ -449,18 +456,17 @@ public class DarienOpMode extends LinearOpMode {
 //                return;
 //            }
         if (isBlue) {
-            //TODO fix case 1v3 and dist to move forwards
             switch (propPosition) {
-                case 1:
-                    MoveX(-20, 0.3);
-                    waitForMotors();
-                    break;
-                case 2:
+                case 3:
                     MoveX(-24, 0.3);
                     waitForMotors();
                     break;
-                case 3:
-                    MoveX(-29, 0.3);
+                case 2:
+                    MoveX(-28, 0.3);
+                    waitForMotors();
+                    break;
+                case 1:
+                    MoveX(-32, 0.3);
                     waitForMotors();
                     break;
             } AutoRotate(90, 0.3, 1);
@@ -547,6 +553,26 @@ public class DarienOpMode extends LinearOpMode {
 
         }
     }
+    public int getPropPosition() {
+        MoveY(2, 0.3);
+        waitForMotors();
+        AutoRotate(10, 0.3, -1);
+        double firstResults = teamPropMaskPipeline.getLastResults()[0];
+        double secondResults1 = teamPropMaskPipeline.getLastResults()[1];
+        AutoRotate(-10, 0.3, 1);
+        double thirdResults = teamPropMaskPipeline.getLastResults()[2];
+        double secondResults2 = teamPropMaskPipeline.getLastResults()[1];
+
+        double secondResults = (secondResults1+secondResults2)/2;
+
+        AutoRotate(0, 0.3, -1);
+
+        if (firstResults > secondResults && firstResults > thirdResults) {return 1;}
+        else if (secondResults > firstResults && secondResults > thirdResults) {return 2;}
+        else {return 3;}
+
+    }
+
         public double sigmoid(double x) {
         //takes in any x value returns from (0,0) to (1,1) scale x accordingly
         return (2/(1+Math.pow(2.71,(-4*x))))-1;

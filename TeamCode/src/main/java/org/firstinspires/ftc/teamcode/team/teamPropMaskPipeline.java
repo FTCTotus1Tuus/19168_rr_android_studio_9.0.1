@@ -28,10 +28,10 @@ import java.util.Arrays;
 class TeamPropMaskPipeline implements VisionProcessor
 {
     public static int minHueR = 0, minSaturationR = 40, minValueR = 0 , maxHueR = 10, maxSaturationR = 260, maxValueR = 300,
-                      minHueB = 70, minSaturationB = 100, minValueB = 0 , maxHueB = 117, maxSaturationB = 260, maxValueB = 300,
-
-            lastResults = 1, frameWidth, frameHeight;
+                      minHueB = 70, minSaturationB = 100, minValueB = 0 , maxHueB = 117, maxSaturationB = 260, maxValueB = 300, frameWidth, frameHeight;
     int minHue, minSaturation, minValue, maxHue, maxSaturation, maxValue;
+
+    double[] lastResults = {1,2,3};
     Rect firstThird, secondThird, thirdThird;
     double avgFirstThird, avgSecondThird, avgThirdThird;
     Mat workingMat1 = new Mat(), workingMat2 = new Mat(), workingMat3 = new Mat();
@@ -60,7 +60,7 @@ class TeamPropMaskPipeline implements VisionProcessor
     }
 
 
-    public int getLastResults() {
+    public double[] getLastResults() {
         return lastResults;
     }
 
@@ -111,10 +111,9 @@ class TeamPropMaskPipeline implements VisionProcessor
         avgThirdThird = Core.countNonZero(mask3);
 
 
-//             You can now use the average values to determine the object's position
-        if (avgFirstThird > avgSecondThird && avgFirstThird > avgThirdThird) {lastResults = 1;}
-        else if (avgSecondThird > avgFirstThird && avgSecondThird > avgThirdThird) {lastResults = 2;}
-        else { lastResults = 3;}
+        lastResults[0] = avgFirstThird;
+        lastResults[1] = avgSecondThird;
+        lastResults[2] = avgThirdThird;
 
 
         workingMat1.release();

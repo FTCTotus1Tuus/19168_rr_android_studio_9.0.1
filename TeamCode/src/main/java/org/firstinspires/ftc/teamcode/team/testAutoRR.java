@@ -72,23 +72,23 @@ public class testAutoRR extends DarienOpMode{
             waitForStart();
 
             if(isStopRequested()) return;
+//            switch (teamPropMaskPipeline.getLastResults()) {
+//                case 1:
+////                    drive.followTrajectory(leftTrajectory);
+//                    telemetry.addData("1", "");
+//                    break;
+//                case 2:
+////                    drive.followTrajectory(middleTrajectory);
+//
+//                    telemetry.addData("2", "");
+//                    break;
+//                case 3:
+////                    drive.followTrajectory(rightTrajectory);
+//
+//                    telemetry.addData("3", "");
+//                    break;
+//            }
 
-            switch (teamPropMaskPipeline.getLastResults()) {
-                case 1:
-//                    drive.followTrajectory(leftTrajectory);
-                    telemetry.addData("1", "");
-                    break;
-                case 2:
-//                    drive.followTrajectory(middleTrajectory);
-
-                    telemetry.addData("2", "");
-                    break;
-                case 3:
-//                    drive.followTrajectory(rightTrajectory);
-
-                    telemetry.addData("3", "");
-                    break;
-            }
 
                 telemetry.addData("",teamPropMaskPipeline.getLastResults());
                 telemetry.update();

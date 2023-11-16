@@ -13,18 +13,19 @@ public class BlueFrontPlace extends DarienOpMode{
 
         waitForStart();
 
-        propPosition = teamPropMaskPipeline.getLastResults();
+        propPosition = getPropPosition();
         telemetry.addData("Prop", teamPropMaskPipeline.getLastResults());
         telemetry.update();
         autoRunMacro("ReadyToPickup");
         setClawPosition("leftClosed"); // makes sure that the purple pixel is picked up
-        MoveY(26, 0.3); //centers on spike tile
+        MoveY(24, 0.3); //centers on spike tile
             sleep(350);
             setArmPosition(250, 0.3); // extends the arm
             sleep(500);
             setWristPosition("dropGround"); // extends the wrist
         waitForMotors();
         switch (propPosition) {
+            //TODO modify 1 and 3 to move forward and back proper amounts
             case 3:
                 AutoRotate(-90, 0.3,1); // turns to spike mark
                 autoRunMacro("dropPixel"); // places the purple pixel on the ground
@@ -59,26 +60,27 @@ public class BlueFrontPlace extends DarienOpMode{
         }
         autoRunMacro("ReadyToPickup");
         setArmPosition(-10,0.1);
-        MoveY(72,0.3); // moves past stage door towards backdrop
+        MoveY(70,0.6); // moves past stage door towards backdrop
         waitForMotors();
             setClawPosition("closed"); // grabs yellow pixel
-        AutoRotate(90, 0.3, -1);
+//        AutoRotate(90, 0.3, -1);
         setArmPosition(250, 0.1); // extends the arm a tiny bit
         while (leftArm.isBusy()) {}
         autoRunMacro("ReadyToDrop"); // extends the wrist
         print("pls no crash","");
         backDropPlace(true, propPosition);
         switch (propPosition) {
+            //TODO fix distance strafed to and fro for placing
             case 3:
-                MoveX(15, 0.3);
+                MoveX(27, 0.3);
                 waitForMotors();
                 break;
             case 2:
-                MoveX(24, 0.3);
+                MoveX(31, 0.3);
                 waitForMotors();
                 break;
             case 1:
-                MoveX(31, 0.3);
+                MoveX(35, 0.3);
                 waitForMotors();
                 break;
         }

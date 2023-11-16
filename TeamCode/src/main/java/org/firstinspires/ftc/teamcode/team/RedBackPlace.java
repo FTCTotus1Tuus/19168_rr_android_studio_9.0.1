@@ -13,12 +13,12 @@ public class RedBackPlace extends DarienOpMode{
 
         waitForStart();
 
-        propPosition = teamPropMaskPipeline.getLastResults();
+        propPosition = getPropPosition();
         telemetry.addData("Prop", teamPropMaskPipeline.getLastResults());
         telemetry.update();
         autoRunMacro("ReadyToPickup");
         setClawPosition("leftClosed"); // makes sure that the purple pixel is picked up
-        MoveY(26, 0.3); //centers on spike tile
+        MoveY(24, 0.3); //centers on spike tile
             sleep(350);
             setArmPosition(250, 0.3); // extends the arm
             sleep(500);
@@ -44,7 +44,7 @@ public class RedBackPlace extends DarienOpMode{
                 break;
             case 3:
                 AutoRotate(-90, 0.3,1); // turns to spike mark
-                MoveY(1.5, 0.1);
+                MoveY(2.5, 0.1);
                 waitForMotors();
                 autoRunMacro("dropPixel"); // places the pixel
                 MoveY(-1.5, 0.1);

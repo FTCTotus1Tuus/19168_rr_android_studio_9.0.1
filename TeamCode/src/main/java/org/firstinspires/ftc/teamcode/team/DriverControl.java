@@ -21,6 +21,7 @@ public class DriverControl extends DarienOpMode{
             runClawSystem();
             runArmSystem();
             runDriveSystem();
+            runDroneSystem();
 
             runMacro("ReadyToPickup");
             runMacro("ReadyToDrop");

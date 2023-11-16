@@ -19,12 +19,12 @@ public class RedFrontPlace extends DarienOpMode{
 
         waitForStart();
 
-        propPosition = teamPropMaskPipeline.getLastResults();
+        propPosition = getPropPosition();
         telemetry.addData("Prop", teamPropMaskPipeline.getLastResults());
         telemetry.update();
         autoRunMacro("ReadyToPickup");
         setClawPosition("leftClosed"); // makes sure that the purple pixel is picked up
-        MoveY(26, 0.3); //centers on spike tile
+        MoveY(24, 0.3); //centers on spike tile
             sleep(350);
             setArmPosition(250, 0.3); // extends the arm
             sleep(500);
@@ -65,10 +65,9 @@ public class RedFrontPlace extends DarienOpMode{
         }
         autoRunMacro("ReadyToPickup");
         setArmPosition(-10,0.1);
-        MoveY(72,0.3); // moves past stage door towards backdrop
+        MoveY(72,0.6); // moves past stage door towards backdrop
         waitForMotors();
             setClawPosition("closed"); // grabs yellow pixel
-        AutoRotate(-90, 0.3, 1);
         setArmPosition(250, 0.1); // extends the arm a tiny bit
         while (leftArm.isBusy()) {}
         autoRunMacro("ReadyToDrop"); // extends the wrist
