@@ -476,18 +476,19 @@ public class DarienOpMode extends LinearOpMode {
         else {
         switch (propPosition) {
             case 1:
-                MoveX(15, 0.3);
+                MoveX(17, 0.3);
                 waitForMotors();
                 break;
             case 2:
-                MoveX(20, 0.3);
+                MoveX(23, 0.3);
                 waitForMotors();
                 break;
             case 3:
                 MoveX(29, 0.3);
                 waitForMotors();
                 break;
-        }        AutoRotate(-90, 0.3, -1);}
+        }
+        AutoRotate(-90, 0.3, -1);}
         autoPlacePixel();
     }
 
