@@ -44,13 +44,13 @@ public class BlueBackPlace extends DarienOpMode {
                 break;
             case 1:
                 AutoRotate(90, 0.3, -1); // turns to spike mark
-                MoveY(1.5, 0.1);
+                MoveY(0.5, 0.1);
                 waitForMotors();
                 autoRunMacro("dropPixel"); // places the pixel
-                MoveY(-1.5, 0.1);
+                MoveY(-0.5, 0.1);
                 autoRunMacro("ReadyToPickup"); // returns the wrist
                 waitForMotors();
-                MoveX(-24, 0.3); // moves in line with top case
+                MoveX(-24, 0.3); // strafe left: moves in line with top case
                 waitForMotors();
                 MoveY(24, 0.3);
                 waitForMotors();
