@@ -47,7 +47,7 @@ public class BlueFrontPlace extends DarienOpMode{
                 MoveY(24, 0.3);
                 waitForMotors();
                 AutoRotate(90, 0.3, -1); // turns towards backdrop
-                MoveY(20, 0.3); // moves in line with top case
+                MoveY(18, 0.3); // moves in line with top case
                 waitForMotors();
                 break;
             case 1:
@@ -81,7 +81,7 @@ public class BlueFrontPlace extends DarienOpMode{
                 waitForMotors();
                 break;
             case 2:
-                MoveX(31, 0.3);
+                MoveX(26, 0.3);
                 waitForMotors();
                 break;
             case 1:
