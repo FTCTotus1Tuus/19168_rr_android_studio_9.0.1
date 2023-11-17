@@ -40,21 +40,23 @@ public class RedBackPlace extends DarienOpMode{
                 MoveX(24, 0.3); // goes to backdrop
                     autoRunMacro("ReadyToPickup"); // returns the wrist
                 waitForMotors();
-                AutoRotate(-90, 0.1 ,1);
+                AutoRotate(-90, 0.3 ,1); // turns to face the backdrop
+                MoveY(6, 0.3); // move up to the backdrop
+                waitForMotors();
                 break;
             case 3:
                 AutoRotate(-90, 0.3,1); // turns to spike mark
                 MoveY(2.5, 0.1);
                 waitForMotors();
                 autoRunMacro("dropPixel"); // places the pixel
-                MoveY(-1.5, 0.1);
+                MoveY(-1, 0.1);
                 autoRunMacro("ReadyToPickup"); // returns the wrist
                 waitForMotors();
-                MoveX(24, 0.3); // moves in line with top case
+                MoveX(20, 0.3); // moves in line with top case
                 waitForMotors();
-                MoveY(24, 0.3);
+                MoveY(26.5, 0.3);
                 waitForMotors();
-                MoveX(-18, 0.3); // in front of pixel spot
+                MoveX(-15, 0.3); // in front of pixel spot
                 waitForMotors();
                 break;
         }
@@ -70,7 +72,7 @@ public class RedBackPlace extends DarienOpMode{
         autoPlacePixel();
         switch (propPosition) {
             case 3:
-                MoveX(15, 0.3);
+                MoveX(18, 0.3);
                 waitForMotors();
                 break;
             case 2:
