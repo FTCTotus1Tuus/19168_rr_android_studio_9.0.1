@@ -41,6 +41,8 @@ public class RedBackPlace extends DarienOpMode{
                     autoRunMacro("ReadyToPickup"); // returns the wrist
                 waitForMotors();
                 AutoRotate(-90, 0.3 ,1); // turns to face the backdrop
+                MoveX(-3.5, 0.3); // strafe left to be centered on position 2
+                waitForMotors();
                 MoveY(1.5, 0.3); // move up to the backdrop
                 waitForMotors();
                 break;
@@ -52,7 +54,7 @@ public class RedBackPlace extends DarienOpMode{
                 MoveY(-1, 0.1);
                 autoRunMacro("ReadyToPickup"); // returns the wrist
                 waitForMotors();
-                MoveX(20, 0.3); // moves in line with top case
+                MoveX(20, 0.3); // strafe right: moves in line with top case
                 waitForMotors();
                 MoveY(26.5, 0.3);
                 waitForMotors();
@@ -60,6 +62,7 @@ public class RedBackPlace extends DarienOpMode{
                 waitForMotors();
                 break;
         }
+        // AT THIS POINT, THE ROBOT SHOULD BE FACING THE BACKDROP READY TO DROP IN THE RIGHT POSITION.
         autoRunMacro("ReadyToPickup");
         setArmPosition(-10,0.1);
         sleep(500);
@@ -72,11 +75,11 @@ public class RedBackPlace extends DarienOpMode{
         autoPlacePixel();
         switch (propPosition) {
             case 3:
-                MoveX(18, 0.3);
+                MoveX(23, 0.3);
                 waitForMotors();
                 break;
             case 2:
-                MoveX(24, 0.3);
+                MoveX(26, 0.3);
                 waitForMotors();
                 break;
             case 1:
