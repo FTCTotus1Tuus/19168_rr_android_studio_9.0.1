@@ -41,7 +41,7 @@ public class RedBackPlace extends DarienOpMode{
                     autoRunMacro("ReadyToPickup"); // returns the wrist
                 waitForMotors();
                 AutoRotate(-90, 0.3 ,1); // turns to face the backdrop
-                MoveY(6, 0.3); // move up to the backdrop
+                MoveY(1.5, 0.3); // move up to the backdrop
                 waitForMotors();
                 break;
             case 3:
