@@ -40,7 +40,7 @@ public class BlueBackPlace extends DarienOpMode {
                 MoveX(-24, 0.3); // goes 1 tile towards the pixel piles
                 autoRunMacro("ReadyToPickup"); // returns the wrist
                 waitForMotors();
-                AutoRotate(90, 0.1, -1);
+                AutoRotate(90, 0.3, -1);
                 break;
             case 1:
                 AutoRotate(90, 0.3, -1); // turns to spike mark
