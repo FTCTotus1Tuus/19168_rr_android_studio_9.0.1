@@ -28,11 +28,15 @@ public class BlueFrontPlace extends DarienOpMode{
             //TODO modify 1 and 3 to move forward and back proper amounts
             case 3:
                 AutoRotate(-90, 0.3,1); // turns to spike mark
+                MoveY(2, 0.1); // move toward the spike mark
+                waitForMotors();
                 autoRunMacro("dropPixel"); // places the purple pixel on the ground
-                MoveX(-24, 0.3);  // moves 1 tile right to be facing the backdrop
+                MoveX(-24, 0.3);  // strafe left to center on the tile
                 autoRunMacro("ReadyToPickup"); // returns the wrist
                 waitForMotors();
                 AutoRotate(90, 0.3, -1);
+                //MoveY(-0.5, 0.1); // back up a tad
+                //waitForMotors();
                 break;
             case 2:
                 autoRunMacro("dropPixel"); // places the pixel
@@ -73,7 +77,7 @@ public class BlueFrontPlace extends DarienOpMode{
         switch (propPosition) {
             //TODO fix distance strafed to and fro for placing
             case 3:
-                MoveX(27, 0.3);
+                MoveX(20, 0.3);
                 waitForMotors();
                 break;
             case 2:

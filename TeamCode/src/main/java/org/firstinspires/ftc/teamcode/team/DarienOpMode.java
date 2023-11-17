@@ -460,7 +460,7 @@ public class DarienOpMode extends LinearOpMode {
         if (isBlue) {
             switch (propPosition) {
                 case 3:
-                    MoveX(-24, 0.3);
+                    MoveX(-23, 0.3);
                     waitForMotors();
                     break;
                 case 2:
