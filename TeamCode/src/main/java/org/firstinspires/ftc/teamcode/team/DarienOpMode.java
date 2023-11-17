@@ -474,21 +474,23 @@ public class DarienOpMode extends LinearOpMode {
             } AutoRotate(90, 0.3, 1);
         }
         else {
-        switch (propPosition) {
-            case 1:
-                MoveX(17, 0.3);
-                waitForMotors();
-                break;
-            case 2:
-                MoveX(23, 0.3);
-                waitForMotors();
-                break;
-            case 3:
-                MoveX(29, 0.3);
-                waitForMotors();
-                break;
+            // RED: STRAFE RIGHT
+            switch (propPosition) {
+                case 1:
+                    MoveX(16, 0.3);
+                    waitForMotors();
+                    break;
+                case 2:
+                    MoveX(23, 0.3);
+                    waitForMotors();
+                    break;
+                case 3:
+                    MoveX(29, 0.3);
+                    waitForMotors();
+                    break;
+            }
+            AutoRotate(-90, 0.3, -1);
         }
-        AutoRotate(-90, 0.3, -1);}
         autoPlacePixel();
     }
 
@@ -496,9 +498,9 @@ public class DarienOpMode extends LinearOpMode {
         MoveY(12, 0.1);
         waitForMotors();
         autoRunMacro("dropPixel");
-        MoveY(-1.5, 0.1);
+        MoveY(-3, 0.25);
+        autoRunMacro("ReadyToPickup");
         waitForMotors();
-        autoRunMacro("ReadyToPickup"); // returns
         return;
     }
 

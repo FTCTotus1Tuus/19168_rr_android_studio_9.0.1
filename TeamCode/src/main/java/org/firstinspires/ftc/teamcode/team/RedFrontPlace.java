@@ -41,14 +41,14 @@ public class RedFrontPlace extends DarienOpMode{
                 break;
             case 2:
                 autoRunMacro("dropPixel"); // places the pixel
-                MoveX(-20, 0.3); // goes 1 tile towards the pixel piles
+                MoveX(-20, 0.3); // strafe left: goes 1 tile towards the pixel piles
                     autoRunMacro("ReadyToPickup"); // returns the wrist
                 waitForMotors();
                 AutoRotate(0, 0.1 ,1);
                 MoveY(24, 0.3);
                 waitForMotors();
                 AutoRotate(-90, 0.3, 1); // turns towards backdrop
-                MoveY(20, 0.3); // moves in line with top case
+                MoveY(16, 0.3); // moves in line with top case
                 waitForMotors();
                 break;
             case 3:
@@ -63,9 +63,10 @@ public class RedFrontPlace extends DarienOpMode{
                 waitForMotors();
                 break;
         }
+        // AT THIS POINT, THE ROBOT SHOULD BE IN THE CENTER OF THE TILE.
         autoRunMacro("ReadyToPickup");
         setArmPosition(-10,0.1);
-        MoveY(72,0.6); // moves past stage door towards backdrop
+        MoveY(72,0.5); // moves past stage door towards backdrop
         waitForMotors();
             setClawPosition("closed"); // grabs yellow pixel
         setArmPosition(250, 0.1); // extends the arm a tiny bit
