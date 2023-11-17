@@ -48,19 +48,20 @@ public class BlueFrontPlace extends DarienOpMode{
                 break;
             case 1:
                 AutoRotate(90, 0.3,-1); // turns to spike mark
-                MoveY(1.5, 0.1);
+                MoveY(0.5, 0.1);
                 waitForMotors();
                 autoRunMacro("dropPixel"); // places the pixel
-                MoveY(-1.5, 0.1);
+                MoveY(-1, 0.1);
                 autoRunMacro("ReadyToPickup"); // returns the wrist
                 waitForMotors();
                 MoveX(24, 0.3); // moves in line with top case
                 waitForMotors();
                 break;
         }
+        // AT THIS POINT, THE ROBOT SHOULD BE IN THE CENTER OF THE TILE IN FRONT OF THE STAGE DOOR.
         autoRunMacro("ReadyToPickup");
         setArmPosition(-10,0.1);
-        MoveY(70,0.6); // moves past stage door towards backdrop
+        MoveY(72, 0.5); // moves past stage door towards backdrop
         waitForMotors();
             setClawPosition("closed"); // grabs yellow pixel
 //        AutoRotate(90, 0.3, -1);
@@ -80,7 +81,7 @@ public class BlueFrontPlace extends DarienOpMode{
                 waitForMotors();
                 break;
             case 1:
-                MoveX(35, 0.3);
+                MoveX(32, 0.3);
                 waitForMotors();
                 break;
         }
