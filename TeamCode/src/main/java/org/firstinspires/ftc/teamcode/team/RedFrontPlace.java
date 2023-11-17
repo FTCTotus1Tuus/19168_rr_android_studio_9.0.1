@@ -59,7 +59,7 @@ public class RedFrontPlace extends DarienOpMode{
                 MoveY(-1.5, 0.1);
                 autoRunMacro("ReadyToPickup"); // returns the wrist
                 waitForMotors();
-                MoveX(-24, 0.3); // moves in line with top case
+                MoveX(-24, 0.3); // strafe left to the center of the tile, facing the backdrop
                 waitForMotors();
                 break;
         }
@@ -84,7 +84,7 @@ public class RedFrontPlace extends DarienOpMode{
                 waitForMotors();
                 break;
             case 3:
-                MoveX(-31, 0.3);
+                MoveX(-30, 0.3);
                 waitForMotors();
                 break;
         }

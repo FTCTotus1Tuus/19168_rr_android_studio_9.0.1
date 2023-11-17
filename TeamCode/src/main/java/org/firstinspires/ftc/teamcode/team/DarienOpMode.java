@@ -474,7 +474,7 @@ public class DarienOpMode extends LinearOpMode {
             } AutoRotate(90, 0.3, 1);
         }
         else {
-            // RED: STRAFE RIGHT
+            // RED: STRAFE RIGHT TO THE CORRECT POSITION BASED ON THE STRIPE MARK
             switch (propPosition) {
                 case 1:
                     MoveX(16, 0.3);
@@ -485,7 +485,7 @@ public class DarienOpMode extends LinearOpMode {
                     waitForMotors();
                     break;
                 case 3:
-                    MoveX(29, 0.3);
+                    MoveX(32, 0.3);
                     waitForMotors();
                     break;
             }
