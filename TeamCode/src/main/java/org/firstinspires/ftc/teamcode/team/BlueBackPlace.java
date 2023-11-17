@@ -27,12 +27,14 @@ public class BlueBackPlace extends DarienOpMode {
         switch (propPosition) {
             case 3:
                 AutoRotate(-90, 0.3, 1); // turns to spike mark
+                MoveY(3, 0.1); // move toward the spike mark
+                waitForMotors();
                 autoRunMacro("dropPixel"); // places the purple pixel on the ground
-                MoveY(-24, 0.3);  // moves 1 tile back to be facing the backdrop
+                MoveY(-23, 0.3);  // moves 1 tile back to be facing the backdrop
                 autoRunMacro("ReadyToPickup"); // returns the wrist
                 waitForMotors();
                 AutoRotate(90, 0.3, -1);
-                MoveX(5, 0.3);
+                MoveX(3.5, 0.3);
                 waitForMotors();
                 break;
             case 2:
@@ -57,6 +59,7 @@ public class BlueBackPlace extends DarienOpMode {
                 MoveX(18, 0.3);
                 break;
         }
+        // AT THIS POINT, THE ROBOT SHOULD BE FACING THE BACKDROP READY TO DROP IN THE RIGHT POSITION.
         autoRunMacro("ReadyToPickup");
         setArmPosition(-10,0.1);
         sleep(500);
