@@ -79,6 +79,8 @@ public class DarienOpMode extends LinearOpMode {
         if(gamepad2.left_stick_button && gamepad2.b){
             droneLauncher.setPower(0.5);
             sleep(500);
+        } else {
+            droneLauncher.setPower(0);
         }
     }
     public void runIntakeSystem() {
