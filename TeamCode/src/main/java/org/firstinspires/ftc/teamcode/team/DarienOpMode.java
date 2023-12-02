@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -27,6 +28,9 @@ public class DarienOpMode extends LinearOpMode {
     public Servo clawWrist;
     public Servo clawLeft;
     public Servo clawRight;
+
+    public ColorSensor colourSensorLeft, colourSensorRight;
+    public static int minRedVal = 900, minBlueVal = 1000;
 
     public static double encoderResolution = 537.7 ; //no change unless we change motors
     public double wheelDiameter = 3.75; // inches
@@ -370,6 +374,8 @@ public class DarienOpMode extends LinearOpMode {
         if (isAuto) {
             leftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             rightArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            colourSensorLeft = hardwareMap.get(ColorSensor.class, "colourSensorLeft");
+            colourSensorRight = hardwareMap.get(ColorSensor.class, "colourSensorRight");
         }
 
 
@@ -388,90 +394,30 @@ public class DarienOpMode extends LinearOpMode {
         feeder = hardwareMap.get(CRServo.class, "feeder");
         droneLauncher = hardwareMap.get(CRServo.class, "droneLauncher");
     }
+
+    public boolean isOnLine(boolean isBlue) {
+        if (isBlue && (colourSensorLeft.blue() > minBlueVal || colourSensorRight.blue() > minBlueVal)) {
+            return true;
+        } else if (!isBlue && (colourSensorRight.red() > minRedVal || colourSensorLeft.red() > minRedVal)) {
+            return true;
+        } else {return false;}
+    }
     public void backDropPlace(boolean isBlue, int propPosition) {
-        // didnt place properly
-        // move less forwards
-        // wait for motors
-//        boolean pixelPlaced = false;
-//        int iter = 0;
-//        int offset = isBlue ? 0 : 3;
-//
-//        while (!pixelPlaced) {
-//            print("test 1","");
-//            List<AprilTagDetection> currentDetections = aprilTag.getDetections(); // gets all april tags in view
-//            print("test 2", "");
-//            AprilTagDetection trueDetection = null;
-//
-//            for (AprilTagDetection detection : currentDetections) {
-//                if (detection.metadata != null && detection.id == propPosition + offset) {
-//                    telemetry.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
-//                    telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
-//                    telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw));
-//                    telemetry.addLine(String.format("RBE %6.1f %6.1f %6.1f  (inch, deg, deg)", detection.ftcPose.range, detection.ftcPose.bearing, detection.ftcPose.elevation));
-//                    telemetry.update();
-//
-//
-//                    trueDetection = detection;
-//                    imu.resetYaw();
-//                    AutoRotate(trueDetection.ftcPose.yaw, 0.1, 0); // aligns robot perpendicular to aprilTag
-//
-//                    MoveX(trueDetection.ftcPose.x, 0.1); // aligns x to aprilTag
-//                    waitForMotors();
-//
-//                    autoPlacePixel(trueDetection); // moves forward and places pixel
-//
-//                    pixelPlaced = true;
-//                    return;
-//                }
-//            }
-//            if (trueDetection == null) {
-//                MoveX(1, 0.3);
-//                iter++;
-//                waitForMotors();
-//            }
-//
-//            if (iter >= 10) {
-//                print("timed out", "");
-//                if (isBlue) {
-//                 MoveX(5,0.1);
-//                }
-//                else {
-//                    switch (propPosition) {
-//                        case 3:
-//                            break;
-//                        case 2:
-//                            MoveX(-9, 0.1);
-//                            waitForMotors();
-//                            break;
-//                        case 1:
-//                            MoveX(-12.5, 0.1);
-//                            waitForMotors();
-//                            break;
-//                    }
-//                }
-//                if (!aprilTag.getDetections().isEmpty()) {
-//                    autoPlacePixel(aprilTag.getDetections().get(0));
-//                } else {
-//                    autoPlacePixel(null);
-//                }
-//                pixelPlaced = true;
-//                return;
-//            }
         if (isBlue) {
             switch (propPosition) {
                 case 3:
-                    MoveX(-23, 0.3);
+                    MoveX(-22, 0.3);
                     waitForMotors();
                     break;
                 case 2:
-                    MoveX(-28, 0.3);
+                    MoveX(-28.5, 0.3);
                     waitForMotors();
                     break;
                 case 1:
                     MoveX(-32, 0.3);
                     waitForMotors();
                     break;
-            } AutoRotate(90, 0.3, 1);
+            } AutoRotate(90F, 0.3, 0);
         }
         else {
             // RED: STRAFE RIGHT TO THE CORRECT POSITION BASED ON THE STRIPE MARK
@@ -481,7 +427,7 @@ public class DarienOpMode extends LinearOpMode {
                     waitForMotors();
                     break;
                 case 2:
-                    MoveX(23, 0.3);
+                    MoveX(26, 0.3);
                     waitForMotors();
                     break;
                 case 3:
@@ -489,18 +435,20 @@ public class DarienOpMode extends LinearOpMode {
                     waitForMotors();
                     break;
             }
-            AutoRotate(-90, 0.3, -1);
+            AutoRotate(-90, 0.3, 0);
         }
+            while (!isOnLine(isBlue)) { MoveY(1, 0.2);}
+            MoveY(3.5,0.1); // chagne to 2.5
+            waitForMotors();
         autoPlacePixel();
     }
 
     public void autoPlacePixel() {
-        MoveY(12, 0.1);
         waitForMotors();
         autoRunMacro("dropPixel");
         MoveY(-3, 0.25);
-        autoRunMacro("ReadyToPickup");
         waitForMotors();
+        autoRunMacro("ReadyToPickup");
         return;
     }
 
@@ -538,6 +486,7 @@ public class DarienOpMode extends LinearOpMode {
         if (direction == 0) {
             if ((TargetPosDegrees-getRawHeading()) > 0) {direction=-1;}
             else {direction = 1;}
+            rotationTolerance = 2;
         }
 
         while (isRotating) {

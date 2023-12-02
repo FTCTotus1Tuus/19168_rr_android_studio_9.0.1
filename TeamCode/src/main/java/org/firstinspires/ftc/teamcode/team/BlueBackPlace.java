@@ -54,6 +54,7 @@ public class BlueBackPlace extends DarienOpMode {
                 waitForMotors();
                 MoveX(-24, 0.3); // strafe left: moves in line with top case
                 waitForMotors();
+                AutoRotate(90, 0.3, 1);
                 MoveY(24, 0.3);
                 waitForMotors();
                 MoveX(18, 0.3);
@@ -65,10 +66,13 @@ public class BlueBackPlace extends DarienOpMode {
         sleep(500);
             setClawPosition("closed"); // grabs yellow pixel
         sleep(250);
-        setArmPosition(250, 0.1); // extends the arm a tiny bit
+        setArmPosition(200, 0.1); // extends the arm a tiny bit
         while (leftArm.isBusy()) {}
         autoRunMacro("ReadyToDrop"); // extends the wrist
         print("pls no crash", "");
+        while (!isOnLine(true)) { MoveY(1, 0.2);}
+        MoveY(3.5,0.1); // chagne to 2.5
+        waitForMotors();
         autoPlacePixel();
         switch (propPosition) {
             case 1:

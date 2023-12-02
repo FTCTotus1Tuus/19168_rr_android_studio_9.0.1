@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-@Disabled
+//@Disabled
 @Autonomous
 public class testAutoRR extends DarienOpMode{
         @Override
@@ -63,9 +63,9 @@ public class testAutoRR extends DarienOpMode{
 //                    .addDisplacementMarker(80, () -> {
 //                        setWristPosition("drop");
 //                    })
-//                    .splineTo(new Vector2d(-28.47, -12.30), Math.toRadians(6.31))
-//                    .splineTo(new Vector2d(5.90, -10.26), Math.toRadians(-1.33))
-//                    .splineTo(new Vector2d(45, -37.06), Math.toRadians(0.00))
+                    .splineTo(new Vector2d(-28.47, -12.30), Math.toRadians(6.31))
+                    .splineTo(new Vector2d(5.90, -10.26), Math.toRadians(-1.33))
+                    .splineTo(new Vector2d(45, -37.06), Math.toRadians(0.00))
                     .build();
 
 

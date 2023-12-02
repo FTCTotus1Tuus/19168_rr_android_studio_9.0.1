@@ -28,9 +28,11 @@ public class BlueFrontPlace extends DarienOpMode{
             //TODO modify 1 and 3 to move forward and back proper amounts
             case 3:
                 AutoRotate(-90, 0.3,1); // turns to spike mark
-                MoveY(2, 0.1); // move toward the spike mark
+                MoveY(3, 0.1); // move toward the spike mark
                 waitForMotors();
                 autoRunMacro("dropPixel"); // places the purple pixel on the ground
+                MoveY(-1, 0.1);
+                waitForMotors();
                 MoveX(-24, 0.3);  // strafe left to center on the tile
                 autoRunMacro("ReadyToPickup"); // returns the wrist
                 waitForMotors();
@@ -69,7 +71,7 @@ public class BlueFrontPlace extends DarienOpMode{
         waitForMotors();
             setClawPosition("closed"); // grabs yellow pixel
 //        AutoRotate(90, 0.3, -1);
-        setArmPosition(250, 0.1); // extends the arm a tiny bit
+        setArmPosition(200, 0.1); // extends the arm a tiny bit
         while (leftArm.isBusy()) {}
         autoRunMacro("ReadyToDrop"); // extends the wrist
         print("pls no crash","");
@@ -77,11 +79,11 @@ public class BlueFrontPlace extends DarienOpMode{
         switch (propPosition) {
             //TODO fix distance strafed to and fro for placing
             case 3:
-                MoveX(20, 0.3);
+                MoveX(15, 0.3);
                 waitForMotors();
                 break;
             case 2:
-                MoveX(26, 0.3);
+                MoveX(24, 0.3);
                 waitForMotors();
                 break;
             case 1:

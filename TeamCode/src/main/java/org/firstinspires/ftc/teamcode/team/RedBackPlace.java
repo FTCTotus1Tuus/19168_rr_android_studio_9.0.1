@@ -48,7 +48,7 @@ public class RedBackPlace extends DarienOpMode{
                 break;
             case 3:
                 AutoRotate(-90, 0.3,1); // turns to spike mark
-                MoveY(2.5, 0.1);
+                MoveY(3.25, 0.1);
                 waitForMotors();
                 autoRunMacro("dropPixel"); // places the pixel
                 MoveY(-1, 0.1);
@@ -58,6 +58,7 @@ public class RedBackPlace extends DarienOpMode{
                 waitForMotors();
                 MoveY(26.5, 0.3);
                 waitForMotors();
+                AutoRotate(-90, 0.2, 0);
                 MoveX(-15, 0.3); // in front of pixel spot
                 waitForMotors();
                 break;
@@ -68,10 +69,13 @@ public class RedBackPlace extends DarienOpMode{
         sleep(500);
             setClawPosition("closed"); // grabs yellow pixel
         sleep(250);
-        setArmPosition(250, 0.1); // extends the arm a tiny bit
+        setArmPosition(200, 0.1); // extends the arm a tiny bit
         while (leftArm.isBusy()) {}
         autoRunMacro("ReadyToDrop"); // extends the wrist
         print("pls no crash","");
+        while (!isOnLine(false)) { MoveY(1, 0.2);}
+        MoveY(3.5,0.1); // chagne to 2.5
+        waitForMotors();
         autoPlacePixel();
         switch (propPosition) {
             case 3:

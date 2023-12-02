@@ -53,10 +53,10 @@ public class RedFrontPlace extends DarienOpMode{
                 break;
             case 3:
                 AutoRotate(-90, 0.3,1); // turns to spike mark
-                MoveY(1.5, 0.1);
+                MoveY(2.5, 0.1);
                 waitForMotors();
                 autoRunMacro("dropPixel"); // places the pixel
-                MoveY(-1.5, 0.1);
+                MoveY(-3, 0.1);
                 autoRunMacro("ReadyToPickup"); // returns the wrist
                 waitForMotors();
                 MoveX(-24, 0.3); // strafe left to the center of the tile, facing the backdrop
@@ -69,7 +69,7 @@ public class RedFrontPlace extends DarienOpMode{
         MoveY(72,0.5); // moves past stage door towards backdrop
         waitForMotors();
             setClawPosition("closed"); // grabs yellow pixel
-        setArmPosition(250, 0.1); // extends the arm a tiny bit
+        setArmPosition(200, 0.1); // extends the arm a tiny bit
         while (leftArm.isBusy()) {}
         autoRunMacro("ReadyToDrop"); // extends the wrist
         print("pls no crash","");
