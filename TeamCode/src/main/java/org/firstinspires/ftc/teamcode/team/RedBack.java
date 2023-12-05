@@ -1,15 +1,9 @@
 package org.firstinspires.ftc.teamcode.team;
 
-import static android.opengl.Matrix.length;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-
-import java.util.List;
-
 @Autonomous
-public class RedFrontPlace extends DarienOpMode{
+public class RedBack extends DarienOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
         initCamera(false);
@@ -34,57 +28,64 @@ public class RedFrontPlace extends DarienOpMode{
             case 1:
                 AutoRotate(90, 0.3,-1); // turns to spike mark
                 autoRunMacro("dropPixel"); // places the purple pixel on the ground
-                MoveX(24, 0.3);  // moves 1 tile right to be facing the backdrop
+                MoveY(-24, 0.3);  // moves 1 tile back to be facing the backdrop
                 autoRunMacro("ReadyToPickup"); // returns the wrist
                 waitForMotors();
                 AutoRotate(-90, 0.3, 1);
+                MoveX(-5, 0.3);
+                waitForMotors();
                 break;
             case 2:
                 autoRunMacro("dropPixel"); // places the pixel
-                MoveX(-20, 0.3); // strafe left: goes 1 tile towards the pixel piles
+                MoveX(24, 0.3); // goes to backdrop
                     autoRunMacro("ReadyToPickup"); // returns the wrist
                 waitForMotors();
-                AutoRotate(0, 0.1 ,1);
-                MoveY(24, 0.3);
+                AutoRotate(-90, 0.3 ,1); // turns to face the backdrop
+                MoveX(-3.5, 0.3); // strafe left to be centered on position 2
                 waitForMotors();
-                AutoRotate(-90, 0.3, 1); // turns towards backdrop
-                MoveY(16, 0.3); // moves in line with top case
+                MoveY(1.5, 0.3); // move up to the backdrop
                 waitForMotors();
                 break;
             case 3:
                 AutoRotate(-90, 0.3,1); // turns to spike mark
-                MoveY(2.5, 0.1);
+                MoveY(3.25, 0.1);
                 waitForMotors();
                 autoRunMacro("dropPixel"); // places the pixel
-                MoveY(-3, 0.1);
+                MoveY(-1, 0.1);
                 autoRunMacro("ReadyToPickup"); // returns the wrist
                 waitForMotors();
-                MoveX(-24, 0.3); // strafe left to the center of the tile, facing the backdrop
+                MoveX(20, 0.3); // strafe right: moves in line with top case
+                waitForMotors();
+                MoveY(26.5, 0.3);
+                waitForMotors();
+                AutoRotate(-90, 0.2, 0);
+                MoveX(-15, 0.3); // in front of pixel spot
                 waitForMotors();
                 break;
         }
-        // AT THIS POINT, THE ROBOT SHOULD BE IN THE CENTER OF THE TILE.
+        // AT THIS POINT, THE ROBOT SHOULD BE FACING THE BACKDROP READY TO DROP IN THE RIGHT POSITION.
         autoRunMacro("ReadyToPickup");
         setArmPosition(-10,0.1);
-        MoveY(72,0.5); // moves past stage door towards backdrop
-        waitForMotors();
+        sleep(500);
             setClawPosition("closed"); // grabs yellow pixel
+        sleep(250);
         setArmPosition(200, 0.1); // extends the arm a tiny bit
         while (leftArm.isBusy()) {}
         autoRunMacro("ReadyToDrop"); // extends the wrist
         print("pls no crash","");
-        backDropPlace(false, propPosition);
+        moveToBackdrop(false);
+        autoPlacePixel();
         switch (propPosition) {
-            case 1:
-                MoveX(-15, 0.3);
+            case 3:
+                MoveX(23, 0.3);
                 waitForMotors();
                 break;
             case 2:
-                MoveX(-24, 0.3);
+                MoveX(26, 0.3);
                 waitForMotors();
                 break;
-            case 3:
-                MoveX(-30, 0.3);
+            case 1:
+                MoveX(31, 0.3);
                 waitForMotors();
                 break;
         }

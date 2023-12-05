@@ -1,7 +1,7 @@
-package org.firstinspires.ftc.teamcode.team;
+package org.firstinspires.ftc.teamcode.team.testing;
 
-import static org.firstinspires.ftc.teamcode.team.TeamPropMaskPipeline.clawPositionL;
-import static org.firstinspires.ftc.teamcode.team.TeamPropMaskPipeline.clawPositionR;
+//import static org.firstinspires.ftc.teamcode.team.TeamPropMaskPipeline.clawPositionL;
+//import static org.firstinspires.ftc.teamcode.team.TeamPropMaskPipeline.clawPositionR;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;

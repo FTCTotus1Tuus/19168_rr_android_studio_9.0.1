@@ -20,58 +20,37 @@ import java.util.List;
 @Config
 public class DarienOpMode extends LinearOpMode {
 
-    public CRServo leftIntake;
-    public CRServo rightIntake;
-    public CRServo feeder;
-    public CRServo droneLauncher;
-
-    public Servo clawWrist;
-    public Servo clawLeft;
-    public Servo clawRight;
-
+    public CRServo leftIntake, rightIntake, feeder, droneLauncher;
+    public Servo clawWrist, clawLeft, clawRight;
     public ColorSensor colourSensorLeft, colourSensorRight;
     public static int minRedVal = 900, minBlueVal = 1000;
-
     public static double encoderResolution = 537.7 ; //no change unless we change motors
     public double wheelDiameter = 3.75; // inches
-
     public double constMult = (wheelDiameter * (Math.PI));
     public double constant = encoderResolution / constMult;
     public static double rotationTolerance = 5;
     public static double power = 0.3;
-    public int encoderPos0;
-    public int encoderPos1;
-    public int encoderPos2;
-    public int encoderPos3;
+    public int encoderPos0, encoderPos1, encoderPos2, encoderPos3;
     double clawWristPositionPickup = 0.71;
     double clawWristPositionDrop = 0.3;
     public static double clawWristPositionGround = 0.6;
-    // l open is 0.4 closed is 0.1
-    // r open is 0.6 closed is 0.9 for claw servos
     public double clawLeftPositionOpen = 0.4;
     public double clawLeftPositionClosed = 0.08;
     public double clawRightPositionOpen = 0.6;
     public double clawRightPositionClosed = 0.93;
-
     public static int armOutPosition = 750;
-
     public double[] direction = {0.0, 0.0};
     public double rotation;
     public int encoderPos;
     public double regularDivBy = 1;
     public double turboDivBy = 1;
     public boolean turboBoost;
-
     public DcMotor omniMotor0; // front left
     public DcMotor omniMotor1; // front right
     public DcMotor omniMotor2; // back left
     public DcMotor omniMotor3; // back right
-
-    public DcMotor leftArm;
-    public DcMotor rightArm;
-
+    public DcMotor leftArm, rightArm;
     public IMU imu;
-
     public VisionPortal visionPortal;
     public TeamPropMaskPipeline teamPropMaskPipeline;
     public AprilTagProcessor aprilTag;
@@ -81,7 +60,7 @@ public class DarienOpMode extends LinearOpMode {
 
     public void runDroneSystem(){
         if(gamepad2.left_stick_button && gamepad2.b){
-            droneLauncher.setPower(0.5);
+            droneLauncher.setPower(0.8);
             sleep(500);
         } else {
             droneLauncher.setPower(0);
@@ -190,8 +169,6 @@ public class DarienOpMode extends LinearOpMode {
         // DONE: Arm control on the left joystick up/down.
         leftArm.setPower(-gamepad2.left_stick_y);
         rightArm.setPower(-gamepad2.left_stick_y);
-        //leftArm.setPower(gamepad2.right_trigger-gamepad2.left_trigger);
-        //rightArm.setPower(gamepad2.right_trigger-gamepad2.left_trigger);
     }
 
     public void setArmPosition(int position, double power) {
@@ -406,11 +383,11 @@ public class DarienOpMode extends LinearOpMode {
         if (isBlue) {
             switch (propPosition) {
                 case 3:
-                    MoveX(-22, 0.3);
+                    MoveX(-23, 0.3);
                     waitForMotors();
                     break;
                 case 2:
-                    MoveX(-28.5, 0.3);
+                    MoveX(-26, 0.3);
                     waitForMotors();
                     break;
                 case 1:
@@ -423,11 +400,11 @@ public class DarienOpMode extends LinearOpMode {
             // RED: STRAFE RIGHT TO THE CORRECT POSITION BASED ON THE STRIPE MARK
             switch (propPosition) {
                 case 1:
-                    MoveX(16, 0.3);
+                    MoveX(14.5, 0.3);
                     waitForMotors();
                     break;
                 case 2:
-                    MoveX(26, 0.3);
+                    MoveX(25, 0.3);
                     waitForMotors();
                     break;
                 case 3:
@@ -437,10 +414,16 @@ public class DarienOpMode extends LinearOpMode {
             }
             AutoRotate(-90, 0.3, 0);
         }
-            while (!isOnLine(isBlue)) { MoveY(1, 0.2);}
-            MoveY(3.5,0.1); // chagne to 2.5
-            waitForMotors();
+        moveToBackdrop(isBlue);
         autoPlacePixel();
+    }
+
+    public void moveToBackdrop(boolean isBlue) {
+        MoveY(24, 0.2);
+        while (!isOnLine(isBlue)) {}
+        print("found line", "");
+        MoveY(3,0.1); // chagne to 2.5
+        waitForMotors();
     }
 
     public void autoPlacePixel() {
@@ -487,6 +470,7 @@ public class DarienOpMode extends LinearOpMode {
             if ((TargetPosDegrees-getRawHeading()) > 0) {direction=-1;}
             else {direction = 1;}
             rotationTolerance = 2;
+            power/=2;
         }
 
         while (isRotating) {

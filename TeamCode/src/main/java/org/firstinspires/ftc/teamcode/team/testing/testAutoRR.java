@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.team;
+package org.firstinspires.ftc.teamcode.team.testing;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -14,10 +14,11 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.team.DarienOpMode;
 
-//@Disabled
+@Disabled
 @Autonomous
-public class testAutoRR extends DarienOpMode{
+public class testAutoRR extends DarienOpMode {
         @Override
         public void runOpMode() {
             IMU imu = hardwareMap.get(IMU.class, "imu");
@@ -90,7 +91,7 @@ public class testAutoRR extends DarienOpMode{
 //            }
 
 
-                telemetry.addData("",teamPropMaskPipeline.getLastResults());
+//                telemetry.addData("",teamPropMaskPipeline.getLastResults());
                 telemetry.update();
 
 
