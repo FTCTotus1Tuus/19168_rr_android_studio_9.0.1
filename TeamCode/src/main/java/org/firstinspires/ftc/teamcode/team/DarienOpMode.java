@@ -73,8 +73,8 @@ public class DarienOpMode extends LinearOpMode {
             rightIntake.setPower(-1);
         } else if (gamepad1.right_trigger > 0) {
             // Eject pixels
-            leftIntake.setPower(-1);
-            rightIntake.setPower(1);
+            leftIntake.setPower(-0.5);
+            rightIntake.setPower(0.5);
         } else {
             // Stop
             leftIntake.setPower(0);
@@ -373,9 +373,10 @@ public class DarienOpMode extends LinearOpMode {
     }
 
     public boolean isOnLine(boolean isBlue) {
-        if (isBlue && (colourSensorLeft.blue() > minBlueVal || colourSensorRight.blue() > minBlueVal)) {
+        //|| colourSensorRight.blue() > minBlueVal
+        if (isBlue && (colourSensorLeft.blue() > minBlueVal )) {
             return true;
-        } else if (!isBlue && (colourSensorRight.red() > minRedVal || colourSensorLeft.red() > minRedVal)) {
+        } else if (!isBlue && (colourSensorLeft.red() > minRedVal)) {
             return true;
         } else {return false;}
     }
@@ -408,7 +409,7 @@ public class DarienOpMode extends LinearOpMode {
                     waitForMotors();
                     break;
                 case 3:
-                    MoveX(32, 0.3);
+                    MoveX(30, 0.3);
                     waitForMotors();
                     break;
             }

@@ -59,10 +59,11 @@ public class RedBack extends DarienOpMode{
                 MoveY(26.5, 0.3);
                 waitForMotors();
                 AutoRotate(-90, 0.2, 0);
-                MoveX(-15, 0.3); // in front of pixel spot
+                MoveX(-17.5, 0.3); // in front of pixel spot
                 waitForMotors();
                 break;
         }
+        AutoRotate(-90, 0.2, 0);
         // AT THIS POINT, THE ROBOT SHOULD BE FACING THE BACKDROP READY TO DROP IN THE RIGHT POSITION.
         autoRunMacro("ReadyToPickup");
         setArmPosition(-10,0.1);

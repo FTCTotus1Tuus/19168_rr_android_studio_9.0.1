@@ -39,6 +39,8 @@ public class BlueBack extends DarienOpMode {
                 break;
             case 2:
                 autoRunMacro("dropPixel"); // places the pixel
+                AutoRotate(0,0.3, 0);
+
                 MoveX(-24, 0.3); // goes 1 tile towards the pixel piles
                 autoRunMacro("ReadyToPickup"); // returns the wrist
                 waitForMotors();

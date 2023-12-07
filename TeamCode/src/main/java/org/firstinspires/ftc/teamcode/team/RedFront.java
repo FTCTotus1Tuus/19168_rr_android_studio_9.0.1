@@ -47,10 +47,10 @@ public class RedFront extends DarienOpMode{
                 break;
             case 3:
                 AutoRotate(-90, 0.3,1); // turns to spike mark
-                MoveY(2.5, 0.1);
+                MoveY(3, 0.1);
                 waitForMotors();
                 autoRunMacro("dropPixel"); // places the pixel
-                MoveY(-3, 0.1);
+                MoveY(-4, 0.1);
                 autoRunMacro("ReadyToPickup"); // returns the wrist
                 waitForMotors();
                 MoveX(-24, 0.3); // strafe left to the center of the tile, facing the backdrop
