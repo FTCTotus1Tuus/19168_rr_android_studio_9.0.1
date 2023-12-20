@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.team;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous
-public class BlueFront extends DarienOpMode{
+public class BlueFront extends DarienOpModeAuto{
     @Override
     public void runOpMode() throws InterruptedException {
         initCamera(true);

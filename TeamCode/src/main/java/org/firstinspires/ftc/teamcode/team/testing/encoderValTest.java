@@ -8,10 +8,11 @@ import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.team.DarienOpMode;
+import org.firstinspires.ftc.teamcode.team.DarienOpModeAuto;
 
 @Disabled
 @TeleOp
-public class encoderValTest extends DarienOpMode {
+public class encoderValTest extends DarienOpModeAuto {
     public void runOpMode() {
         initControls(true);
 

@@ -14,11 +14,11 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.team.DarienOpMode;
+import org.firstinspires.ftc.teamcode.team.DarienOpModeAuto;
 
-@Disabled
+
 @Autonomous
-public class testAutoRR extends DarienOpMode {
+public class testAutoRR extends DarienOpModeAuto {
         @Override
         public void runOpMode() {
             IMU imu = hardwareMap.get(IMU.class, "imu");

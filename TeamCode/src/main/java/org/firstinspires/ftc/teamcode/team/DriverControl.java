@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp
 
-public class DriverControl extends DarienOpMode{
+public class DriverControl extends DarienOpModeTeleop{
 
 
     public void runOpMode(){

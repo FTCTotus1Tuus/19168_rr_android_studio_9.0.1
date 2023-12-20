@@ -3,11 +3,11 @@ package org.firstinspires.ftc.teamcode.team.testing;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-import org.firstinspires.ftc.teamcode.team.DarienOpMode;
+import org.firstinspires.ftc.teamcode.team.DarienOpModeAuto;
 
 @Disabled
 @Autonomous
-public class colourSensorDebug extends DarienOpMode {
+public class colourSensorDebug extends DarienOpModeAuto {
     @Override
     public void runOpMode() throws InterruptedException {
         initControls(true);

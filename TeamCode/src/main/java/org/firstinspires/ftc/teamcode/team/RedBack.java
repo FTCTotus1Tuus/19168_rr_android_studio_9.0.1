@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.team;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous
-public class RedBack extends DarienOpMode{
+public class RedBack extends DarienOpModeAuto{
     @Override
     public void runOpMode() throws InterruptedException {
         initCamera(false);
