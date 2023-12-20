@@ -21,82 +21,67 @@ import org.firstinspires.ftc.teamcode.team.DarienOpModeAuto;
 public class testAutoRR extends DarienOpModeAuto {
         @Override
         public void runOpMode() {
-            IMU imu = hardwareMap.get(IMU.class, "imu");
-            IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                    DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
-            imu.initialize(parameters);
-
-            imu.resetYaw();
-
-
-            leftArm = initializeMotor("leftArm");
-            rightArm = initializeMotor("rightArm");
-
-            leftArm.setDirection(DcMotor.Direction.REVERSE);
-
-            if (true) {
-                leftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                rightArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            }
-            leftIntake = hardwareMap.get(CRServo.class, "leftIntake");
-            rightIntake = hardwareMap.get(CRServo.class, "rightIntake");
-
-            clawWrist = hardwareMap.get(Servo.class, "clawWrist");
-            clawLeft = hardwareMap.get(Servo.class, "clawLeft");
-            clawRight = hardwareMap.get(Servo.class, "clawRight");
-
-            feeder = hardwareMap.get(CRServo.class, "feeder");
+           initControlsRR(true);
             initCamera(false);
             SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-            drive.setPoseEstimate(new Pose2d(-36.04, -61.37, Math.toRadians(90.00)));
+//            drive.setPoseEstimate(new Pose2d(-36.04, -61.37, Math.toRadians(90.00)));
+
 
 
 //            Trajectory leftTrajectory = drive.trajectoryBuilder(new Pose2d(-36.04, -61.37, Math.toRadians(90.00))).build();
 //            Trajectory middleTrajectory = drive.trajectoryBuilder(new Pose2d(-36.04, -61.37, Math.toRadians(90.00))).build();
 //            Trajectory rightTrajectory = drive.trajectoryBuilder(new Pose2d(-36.04, -61.37, Math.toRadians(90.00))).build();
 
-            Trajectory mainTrajectory = drive.trajectoryBuilder(new Pose2d(-36.04, -61.37, Math.toRadians(90.00)))
-
-                    .forward(33)
-//                    .addDisplacementMarker(75, () -> {
-//                        setArmPosition("out");
-//                    })
-//                    .addDisplacementMarker(80, () -> {
-//                        setWristPosition("drop");
-//                    })
-                    .splineTo(new Vector2d(-28.47, -12.30), Math.toRadians(6.31))
-                    .splineTo(new Vector2d(5.90, -10.26), Math.toRadians(-1.33))
-                    .splineTo(new Vector2d(45, -37.06), Math.toRadians(0.00))
+            Trajectory centerOnTile = drive.trajectoryBuilder(new Pose2d())
+                    .forward(24)
+                    .addDisplacementMarker(10, () -> {
+                        setArmPosition(250, 0.3);
+                        setWristPosition("dropGround");
+                    })
                     .build();
-
-
+            Trajectory propPositionOne = drive.trajectoryBuilder(new Pose2d())
+                            .strafeRight(24).build(); //25 TODO fix this traj prob messing up pos 1
+            Trajectory propPositionTwo = drive.trajectoryBuilder(new Pose2d())
+                            .strafeLeft(24).build();  //20
+            Trajectory forwardSixteen = drive.trajectoryBuilder(new Pose2d())
+                            .forward(16).build();
             waitForStart();
 
+
             if(isStopRequested()) return;
-//            switch (teamPropMaskPipeline.getLastResults()) {
-//                case 1:
-////                    drive.followTrajectory(leftTrajectory);
-//                    telemetry.addData("1", "");
-//                    break;
-//                case 2:
-////                    drive.followTrajectory(middleTrajectory);
-//
-//                    telemetry.addData("2", "");
-//                    break;
-//                case 3:
-////                    drive.followTrajectory(rightTrajectory);
-//
-//                    telemetry.addData("3", "");
-//                    break;
-//            }
 
+            int propPosition = getPropPositionRR(drive);
 
-//                telemetry.addData("",teamPropMaskPipeline.getLastResults());
-                telemetry.update();
+            autoRunMacro("ReadyToPickup");
+            setClawPosition("leftClosed"); // makes sure that the purple pixel is picked up
 
+            drive.followTrajectory(centerOnTile); //centers on spike tile
 
-            drive.followTrajectory(mainTrajectory);
-            setClawPosition("open");
+            switch (propPosition) {
+                case 1:
+                    drive.turn(Math.toRadians(90)); // turns to spike mark
+                    autoRunMacro("dropPixel"); // places the purple pixel on the ground
+                    drive.followTrajectory(propPositionOne);  // moves 1 tile right to be facing the backdrop
+                    autoRunMacro("ReadyToPickup"); // returns the wrist
+                    drive.turn(180);
+                    break;
+                case 2:
+                    autoRunMacro("dropPixel"); // places the pixel
+                    drive.followTrajectory(propPositionTwo); // strafe left: goes 1 tile towards the pixel piles
+                    autoRunMacro("ReadyToPickup"); // returns the wrist
+                    drive.followTrajectory(centerOnTile);
+                   drive.turn(Math.toRadians(-90)); // turns towards backdrop
+                   drive.followTrajectory(forwardSixteen);
+                    break;
+                case 3:
+                    drive.turn(Math.toRadians(-90)); // turns to spike mark
+                    autoRunMacro("dropPixel"); // places the pixel
+                    autoRunMacro("ReadyToPickup"); // returns the wrist
+                   drive.followTrajectory(propPositionTwo); // strafe left to the center of the tile, facing the backdrop
+                    break;
+            }
+//            drive.followTrajectory(mainTrajectory);
+
         }
     }
 

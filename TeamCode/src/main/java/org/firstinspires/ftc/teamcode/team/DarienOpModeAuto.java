@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.team;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -11,6 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
@@ -20,6 +24,7 @@ public class DarienOpModeAuto extends DarienOpMode {
     public VisionPortal visionPortal;
     public TeamPropMaskPipeline teamPropMaskPipeline;
     public AprilTagProcessor aprilTag;
+    double timeRot1=0.5, timeRot2=0.75;
 
     @Override
     public void runOpMode() throws InterruptedException {}
@@ -339,6 +344,33 @@ public class DarienOpModeAuto extends DarienOpMode {
         else {return 3;}
 
     }
+    public int getPropPositionRR(SampleMecanumDrive drive) {
+        final double[] firstResults = new double[1];
+        final double[] secondResults1 = new double[1];
+        final double[] thirdResults = new double[1];
+        final double[] secondResults2 = new double[1];
+
+
+        drive.followTrajectory(drive.trajectoryBuilder(new Pose2d()).forward(2).build());
+              drive.turn(Math.toRadians(10));
+                    firstResults[0] = teamPropMaskPipeline.getLastResults()[0];
+                    secondResults1[0] = teamPropMaskPipeline.getLastResults()[1];
+              drive.turn(Math.toRadians(-20));
+                    thirdResults[0] = teamPropMaskPipeline.getLastResults()[2];
+                    secondResults2[0] = teamPropMaskPipeline.getLastResults()[1];
+              drive.turn(Math.toRadians(12.5));
+
+
+        double secondResults = (secondResults1[0] +secondResults2[0])/2;
+
+
+        if (firstResults[0] > secondResults && firstResults[0] > thirdResults[0]) {return 1;}
+        else if (secondResults > firstResults[0] && secondResults > thirdResults[0]) {return 2;}
+        else {return 3;}
+
+
+
+    }
 
         public double sigmoid(double x) {
         //takes in any x value returns from (0,0) to (1,1) scale x accordingly
@@ -415,5 +447,27 @@ public class DarienOpModeAuto extends DarienOpMode {
             return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
         }
 
+    public void initControlsRR(boolean isAuto) {
+        //isAuto: true=auto false=teleop
+        leftArm = initializeMotor("leftArm");
+        rightArm = initializeMotor("rightArm");
+
+        leftArm.setDirection(DcMotor.Direction.REVERSE);
+
+        if (isAuto) {
+            leftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rightArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            colourSensorLeft = hardwareMap.get(ColorSensor.class, "colourSensorLeft");
+            colourSensorRight = hardwareMap.get(ColorSensor.class, "colourSensorRight");
+        }
+        leftIntake = hardwareMap.get(CRServo.class, "leftIntake");
+        rightIntake = hardwareMap.get(CRServo.class, "rightIntake");
+
+        clawWrist = hardwareMap.get(Servo.class, "clawWrist");
+        clawLeft = hardwareMap.get(Servo.class, "clawLeft");
+        clawRight = hardwareMap.get(Servo.class, "clawRight");
+
+        feeder = hardwareMap.get(CRServo.class, "feeder");
+    }
 
     }
