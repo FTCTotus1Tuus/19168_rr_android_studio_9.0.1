@@ -351,14 +351,16 @@ public class DarienOpModeAuto extends DarienOpMode {
         final double[] secondResults2 = new double[1];
 
 
-        drive.followTrajectory(drive.trajectoryBuilder(new Pose2d()).forward(2).build());
-              drive.turn(Math.toRadians(10));
-                    firstResults[0] = teamPropMaskPipeline.getLastResults()[0];
-                    secondResults1[0] = teamPropMaskPipeline.getLastResults()[1];
-              drive.turn(Math.toRadians(-20));
-                    thirdResults[0] = teamPropMaskPipeline.getLastResults()[2];
-                    secondResults2[0] = teamPropMaskPipeline.getLastResults()[1];
-              drive.turn(Math.toRadians(12.5));
+        drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).forward(2).build());
+
+        drive.turn(Math.toRadians(5));
+            firstResults[0] = teamPropMaskPipeline.getLastResults()[0];
+            secondResults1[0] = teamPropMaskPipeline.getLastResults()[1];
+        drive.turn(Math.toRadians(-10));
+            thirdResults[0] = teamPropMaskPipeline.getLastResults()[2];
+            secondResults2[0] = teamPropMaskPipeline.getLastResults()[1];
+
+            drive.turn(Math.toRadians(5));
 
 
         double secondResults = (secondResults1[0] +secondResults2[0])/2;
