@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.team.testing;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -53,20 +54,55 @@ public class testAutoRR extends DarienOpModeAuto {
 
 
             TrajectorySequence middle = drive.trajectorySequenceBuilder(startPos)
-                    .splineTo(new Vector2d(-35.89, -39), Math.toRadians(90.00))
+                    .splineTo(new Vector2d(-35.89, -38.5), Math.toRadians(90.00))
                     .addDisplacementMarker(() -> {
                         autoRunMacro("dropPixel");
                     })
-                    .lineTo(new Vector2d(-50, -34.29))
+                    .lineTo(new Vector2d(-48, -39))
                     .addDisplacementMarker(() -> {
                         autoRunMacro("ReadyToPickup");
+                        setClawPosition("closed");
                     })
-                    .splineTo(new Vector2d(-45.50, -12.89), Math.toRadians(0))
-                    .splineTo(new Vector2d(16.38, -12.45), Math.toRadians(0.00))
-                    .splineTo(new Vector2d(42.59, -36.18), Math.toRadians(90.00))
+                    .strafeLeft(2)
+                    .forward(3)
+                    .addDisplacementMarker(() -> {
+                      drive.setPoseEstimate(new Pose2d(drive.getPoseEstimate().vec(), Math.toRadians(90)));
+                    })
+                    .splineTo(new Vector2d(-43, -12), Math.toRadians(90))
+                    .lineTo(new Vector2d(28, -12))
+                    .addDisplacementMarker(() -> {
+                        setArmPosition(250, 0.1);
+                        autoRunMacro("ReadyToDrop");
+                    })
+                    .waitSeconds(1)
+                    .splineTo(new Vector2d(43, -34), Math.toRadians(0))
+                    .addDisplacementMarker(() -> {
+                        setArmPosition(0, 0.3);
+                    })
+                    .forward(10,  SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                            SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)).addDisplacementMarker(() -> {
+                        autoRunMacro("dropPixel");
+                        setWristPosition("pickup");
+                    })
+                    .back(4)
+                    .strafeLeft(30)
+                    .forward(12)
                     .build();
-
-
+            TrajectorySequence readyPlaceOne = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                    .addTemporalMarker(0, () -> {
+                        while (!isOnLine(false)) {}
+                        drive.breakFollowing();
+                    })
+                    .forward(24)
+                    .build();
+            TrajectorySequence readyPlaceTwo = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                    .forward(4,  SampleMecanumDrive.getVelocityConstraint(5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                    SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                    .build();
+            TrajectorySequence park = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                    .strafeLeft(30)
+                    .forward(12)
+                    .build();
 
 
             waitForStart();
@@ -94,6 +130,11 @@ public class testAutoRR extends DarienOpModeAuto {
                     break;
                 case 2:
                     drive.followTrajectorySequence(middle); // up to in front of backboard
+//                    drive.followTrajectorySequence(readyPlaceOne);
+//                    drive.followTrajectorySequence(readyPlaceTwo);
+//                    autoRunMacro("dropPixel");
+//                    drive.followTrajectorySequence(park);
+
                     break;
                 case 3:
 //                    drive.turn(Math.toRadians(-90)); // turns to spike mark
