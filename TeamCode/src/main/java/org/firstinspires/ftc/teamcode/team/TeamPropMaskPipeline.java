@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 @Config
+public
 class TeamPropMaskPipeline implements VisionProcessor
 {
     public static int minHueR = 0, minSaturationR = 40, minValueR = 0 , maxHueR = 10, maxSaturationR = 260, maxValueR = 300,

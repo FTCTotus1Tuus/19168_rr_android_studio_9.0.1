@@ -12,11 +12,15 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.apache.commons.math3.geometry.euclidean.twod.Line;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+
+import java.util.ArrayList;
 
 @Config
 public class DarienOpModeAuto extends DarienOpMode {
@@ -26,6 +30,8 @@ public class DarienOpModeAuto extends DarienOpMode {
     public AprilTagProcessor aprilTag;
     double timeRot1=0.5, timeRot2=0.75;
 
+    double timeout = 3;
+    SampleMecanumDrive drive;
     @Override
     public void runOpMode() throws InterruptedException {}
     public void setWristPosition(String position) {
@@ -203,6 +209,7 @@ public class DarienOpModeAuto extends DarienOpMode {
 
         feeder = hardwareMap.get(CRServo.class, "feeder");
         droneLauncher = hardwareMap.get(CRServo.class, "droneLauncher");
+
     }
 
     public boolean isOnLine(boolean isBlue) {
@@ -215,6 +222,27 @@ public class DarienOpModeAuto extends DarienOpMode {
     }
     public void backDropPlace(boolean isBlue, int propPosition) {
         if (isBlue) {
+            MoveX(-24, 0.5);
+            waitForMotors();
+            setArmPosition(0, 0.3);
+            ArrayList<AprilTagDetection> currentDetections = null;
+            double startTime = getRuntime();
+            do { currentDetections = aprilTag.getDetections();}
+            while (currentDetections.isEmpty() || getRuntime() - startTime > timeout);
+            telemetry.addData("# AprilTags Detected", currentDetections.size());
+            telemetry.update();
+            // Step through the list of detections and display info for each one.
+            for (AprilTagDetection detection : currentDetections) {
+                if (detection.metadata != null) {
+                    alignYellowPixel(detection, propPosition, isBlue);
+                    return;
+                } else {
+                    telemetry.addLine(String.format("\n==== (ID %d) Unknown", detection.id));
+                    telemetry.addLine(String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));
+                }
+            }
+            print("timeout","");
+            sleep(500);
             switch (propPosition) {
                 case 3:
                     MoveX(-23, 0.3);
@@ -228,11 +256,32 @@ public class DarienOpModeAuto extends DarienOpMode {
                     MoveX(-32, 0.3);
                     waitForMotors();
                     break;
-            } AutoRotate(90F, 0.3, 0);
+            }
+            AutoRotate(90, 0.3, 0);
         }
         else {
-            // RED: STRAFE RIGHT TO THE CORRECT POSITION BASED ON THE STRIPE MARK
-            switch (propPosition) {
+            // RED: STRAFE RIGHT TO THE CORRECT POSITION BASED ON THE STRIPE MARK - adding using camera to read as well
+            MoveX(24, 0.3);
+            waitForMotors();
+            setArmPosition(0, 0.3);
+            ArrayList<AprilTagDetection> currentDetections = null;
+            double startTime = getRuntime();
+            do { currentDetections = aprilTag.getDetections();}
+            while (currentDetections.isEmpty() || getRuntime() - startTime > timeout);
+            telemetry.addData("# AprilTags Detected", currentDetections.size());
+            telemetry.update();
+            // Step through the list of detections and display info for each one.
+            for (AprilTagDetection detection : currentDetections) {
+                if (detection.metadata != null) {
+                    alignYellowPixel(detection, propPosition, isBlue);
+                    return;
+                } else {
+                    telemetry.addLine(String.format("\n==== (ID %d) Unknown", detection.id));
+                    telemetry.addLine(String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));
+                }
+            }
+            print("timeout","");
+            switch (propPosition) { //TODO work on default case
                 case 1:
                     MoveX(14.5, 0.3);
                     waitForMotors();
@@ -246,10 +295,50 @@ public class DarienOpModeAuto extends DarienOpMode {
                     waitForMotors();
                     break;
             }
-            AutoRotate(-90, 0.3, 0);
+
+    }}
+
+    public void alignYellowPixel(AprilTagDetection tag, int propPosition, Boolean isBlue) {
+        if (isBlue) {AutoRotate(90, 0.1, 0);}
+        else {AutoRotate(-90, 0.1, 0);} // aligns to the backboard
+        double offset=0, robotPositionX;
+        print("out of rotate", "");
+        int idOffset = 0;
+                if (!isBlue) {idOffset = 3;}
+        switch (tag.id-idOffset) {
+            case 1:
+                offset = 0;
+                break;
+            case 2:
+                offset = 6;
+                break;
+            case 3:
+                offset = 12;
+                break;
         }
-        moveToBackdrop(isBlue);
+        if (isBlue) {offset++;}
+            robotPositionX = -tag.ftcPose.x + offset; //abs pos
+            print("", robotPositionX);
+        double finalMove = 0;
+        switch (propPosition) {
+            case 1:
+                finalMove = -robotPositionX;
+                break;
+            case 2:
+                finalMove = 6 - robotPositionX;
+                break;
+            case 3:
+                finalMove = 12 - robotPositionX;
+                break;
+        } // where to go
+        if (isBlue) {finalMove -= 1;}
+        MoveX(finalMove, 0.3);
+        waitForMotors();
+
+        MoveY(tag.ftcPose.y-3.5, 0.1);
+        waitForMotors();
         autoPlacePixel();
+
     }
 
     public void moveToBackdrop(boolean isBlue) {
@@ -293,6 +382,8 @@ public class DarienOpModeAuto extends DarienOpMode {
 
     public void AutoRotate(double TargetPosDegrees, double power, int direction) {
         //direction counter clockwise is -1 clockwise is 1
+        double timeoutS = 3;
+
         setToRotateRunMode();
         double initError = Math.abs(TargetPosDegrees-getRawHeading());
         double truePower;
@@ -306,7 +397,7 @@ public class DarienOpModeAuto extends DarienOpMode {
             rotationTolerance = 2;
             power/=2;
         }
-
+        double startTime = getRuntime();
         while (isRotating) {
             error = Math.abs(TargetPosDegrees-getRawHeading());
 //            truePower = Math.min(Math.pow((error/scaleConstant),2),1);
@@ -317,26 +408,29 @@ public class DarienOpModeAuto extends DarienOpMode {
             setRotatePower(power, direction);
             if (error<rotationTolerance) {
                 isRotating = false;
-                setRotatePower(0,0);
-                resetEncoder();
-                return;
-
+            } else if (getRuntime() - startTime > timeout) {
+                isRotating = false;
             }
-
         }
+        telemetry.addData("rotate end", "");
+        telemetry.update();
+        setRotatePower(0,0);
+        resetEncoder();
     }
     public int getPropPosition() {
         MoveY(2, 0.3);
         waitForMotors();
         AutoRotate(10, 0.3, -1);
+//        drive.turn(10);
         double firstResults = teamPropMaskPipeline.getLastResults()[0];
         double secondResults1 = teamPropMaskPipeline.getLastResults()[1];
         AutoRotate(-10, 0.3, 1);
+//        drive.turn(-20);
         double thirdResults = teamPropMaskPipeline.getLastResults()[2];
         double secondResults2 = teamPropMaskPipeline.getLastResults()[1];
 
         double secondResults = (secondResults1+secondResults2)/2;
-
+//        drive.turn(10);
         AutoRotate(0, 0.3, -1);
 
         if (firstResults > secondResults && firstResults > thirdResults) {return 1;}

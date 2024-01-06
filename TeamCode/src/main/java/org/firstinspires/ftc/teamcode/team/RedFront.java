@@ -69,6 +69,8 @@ public class RedFront extends DarienOpModeAuto{
         autoRunMacro("ReadyToDrop"); // extends the wrist
         print("pls no crash","");
         backDropPlace(false, propPosition);
+        MoveY(-5, 0.3);
+        setWristPosition("dropGround");
         switch (propPosition) {
             case 1:
                 MoveX(-18, 0.3);
