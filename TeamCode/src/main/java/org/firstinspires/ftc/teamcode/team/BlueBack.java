@@ -2,6 +2,10 @@ package org.firstinspires.ftc.teamcode.team;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+
+import java.util.ArrayList;
+
 @Autonomous
 public class BlueBack extends DarienOpModeAuto {
     @Override
@@ -33,7 +37,7 @@ public class BlueBack extends DarienOpModeAuto {
                 MoveY(-23, 0.3);  // moves 1 tile back to be facing the backdrop
                 autoRunMacro("ReadyToPickup"); // returns the wrist
                 waitForMotors();
-                AutoRotate(90, 0.3, -1);
+                AutoRotate(90, 0.3, 1);
                 MoveX(3.5, 0.3);
                 waitForMotors();
                 break;
@@ -62,6 +66,7 @@ public class BlueBack extends DarienOpModeAuto {
                 MoveX(16, 0.3);
                 break;
         }
+
         // AT THIS POINT, THE ROBOT SHOULD BE FACING THE BACKDROP READY TO DROP IN THE RIGHT POSITION.
         autoRunMacro("ReadyToPickup");
         setArmPosition(-10,0.1);
@@ -71,9 +76,11 @@ public class BlueBack extends DarienOpModeAuto {
         setArmPosition(200, 0.1); // extends the arm a tiny bit
         while (leftArm.isBusy()) {}
         autoRunMacro("ReadyToDrop"); // extends the wrist
+        setArmPosition(0, 0.3);
+
+        alignBackPositions(true, propPosition);
+
         print("pls no crash", "");
-        moveToBackdrop(true);
-        autoPlacePixel();
         switch (propPosition) {
             case 1:
                 MoveX(-15, 0.3);

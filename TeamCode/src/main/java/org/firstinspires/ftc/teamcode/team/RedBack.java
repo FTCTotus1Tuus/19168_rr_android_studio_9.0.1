@@ -56,14 +56,14 @@ public class RedBack extends DarienOpModeAuto{
                 waitForMotors();
                 MoveX(20, 0.3); // strafe right: moves in line with top case
                 waitForMotors();
-                MoveY(26.5, 0.3);
+                MoveY(28, 0.3);
                 waitForMotors();
                 AutoRotate(-90, 0.2, 0);
-                MoveX(-17.5, 0.3); // in front of pixel spot
+                MoveX(-24, 0.3); // in front of pixel spot - changing to center of pixel
                 waitForMotors();
                 break;
         }
-        AutoRotate(-90, 0.2, 0);
+//        AutoRotate(-90, 0.2, 0);
         // AT THIS POINT, THE ROBOT SHOULD BE FACING THE BACKDROP READY TO DROP IN THE RIGHT POSITION.
         autoRunMacro("ReadyToPickup");
         setArmPosition(-10,0.1);
@@ -73,9 +73,11 @@ public class RedBack extends DarienOpModeAuto{
         setArmPosition(200, 0.1); // extends the arm a tiny bit
         while (leftArm.isBusy()) {}
         autoRunMacro("ReadyToDrop"); // extends the wrist
+        setArmPosition(0, 0.3);
+
+        alignBackPositions(true, propPosition);
+
         print("pls no crash","");
-        moveToBackdrop(false);
-        autoPlacePixel();
         switch (propPosition) {
             case 3:
                 MoveX(23, 0.3);

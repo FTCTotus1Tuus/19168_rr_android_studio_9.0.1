@@ -298,6 +298,31 @@ public class DarienOpModeAuto extends DarienOpMode {
 
     }}
 
+    public void alignBackPositions(boolean isBlue, int propPosition){
+
+        ArrayList<AprilTagDetection> currentDetections = null;
+        double startTime = getRuntime();
+        do { currentDetections = aprilTag.getDetections();}
+        while (currentDetections.isEmpty() || getRuntime() - startTime > timeout);
+        telemetry.addData("# AprilTags Detected", currentDetections.size());
+        telemetry.update();
+        // Step through the list of detections and display info for each one.
+        for (AprilTagDetection detection : currentDetections) {
+            if (detection.metadata != null) {
+                alignYellowPixel(detection, propPosition, true);
+                return;
+            } else {
+                telemetry.addLine(String.format("\n==== (ID %d) Unknown", detection.id));
+                telemetry.addLine(String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));
+            }
+        }
+        print("timeout","");
+        sleep(500);
+
+        moveToBackdrop(isBlue);
+        autoPlacePixel();
+    }
+
     public void alignYellowPixel(AprilTagDetection tag, int propPosition, Boolean isBlue) {
         if (isBlue) {AutoRotate(90, 0.1, 0);}
         else {AutoRotate(-90, 0.1, 0);} // aligns to the backboard
@@ -331,7 +356,7 @@ public class DarienOpModeAuto extends DarienOpMode {
                 finalMove = 12 - robotPositionX;
                 break;
         } // where to go
-        if (isBlue) {finalMove -= 1;}
+        if (isBlue) {finalMove -= 0.75;}
         MoveX(finalMove, 0.3);
         waitForMotors();
 
@@ -352,7 +377,7 @@ public class DarienOpModeAuto extends DarienOpMode {
     public void autoPlacePixel() {
         waitForMotors();
         autoRunMacro("dropPixel");
-        MoveY(-3, 0.25);
+        MoveY(-4.5, 0.25);
         waitForMotors();
         autoRunMacro("ReadyToPickup");
         return;
