@@ -31,7 +31,7 @@ public class DarienOpMode extends LinearOpMode {
     public static double rotationTolerance = 5;
     public static double power = 0.3;
     public int encoderPos0, encoderPos1, encoderPos2, encoderPos3;
-    double clawWristPositionPickup = 0.71;
+    double clawWristPositionPickup = 0.7;
     double clawWristPositionDrop = 0.3;
     public static double clawWristPositionGround = 0.6;
     public double clawLeftPositionOpen = 0.4;
