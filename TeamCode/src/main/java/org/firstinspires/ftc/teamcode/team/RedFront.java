@@ -18,7 +18,7 @@ public class RedFront extends DarienOpModeAuto{
         telemetry.update();
         autoRunMacro("ReadyToPickup");
         setClawPosition("leftClosed"); // makes sure that the purple pixel is picked up
-        MoveY(24, 0.3); //centers on spike tile
+        MoveY(25, 0.3); //centers on spike tile
             sleep(350);
             setArmPosition(250, 0.3); // extends the arm
             sleep(500);
@@ -35,11 +35,12 @@ public class RedFront extends DarienOpModeAuto{
                 break;
             case 2:
                 autoRunMacro("dropPixel"); // places the pixel
+                MoveY(-2,0.4);
                 MoveX(-20, 0.3); // strafe left: goes 1 tile towards the pixel piles
                     autoRunMacro("ReadyToPickup"); // returns the wrist
                 waitForMotors();
                 AutoRotate(0, 0.1 ,1);
-                MoveY(25, 0.3);
+                MoveY(26, 0.3);
                 waitForMotors();
                 AutoRotate(-90, 0.3, 1); // turns towards backdrop
                 MoveY(16, 0.3); // moves in line with top case

@@ -357,6 +357,7 @@ public class DarienOpModeAuto extends DarienOpMode {
                 break;
         } // where to go
         if (isBlue) {finalMove -= 0.75;}
+        else if (propPosition==1) { finalMove-=1;}
         MoveX(finalMove, 0.3);
         waitForMotors();
 
@@ -441,6 +442,8 @@ public class DarienOpModeAuto extends DarienOpMode {
         telemetry.update();
         setRotatePower(0,0);
         resetEncoder();
+        print("end of rotate function","");
+
     }
     public int getPropPosition() {
         MoveY(2, 0.3);

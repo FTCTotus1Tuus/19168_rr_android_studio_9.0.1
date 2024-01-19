@@ -48,7 +48,7 @@ public class RedBack extends DarienOpModeAuto{
                 break;
             case 3:
                 AutoRotate(-90, 0.3,1); // turns to spike mark
-                MoveY(3.25, 0.1);
+                MoveY(3.75, 0.1);
                 waitForMotors();
                 autoRunMacro("dropPixel"); // places the pixel
                 MoveY(-1, 0.1);
